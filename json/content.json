@@ -1,0 +1,47 @@
+{
+  "landingPage": {
+    "id": 8221,
+    "uid": "a15c1f1d-9e4e-4dc7-9c45-c04412fc5064",
+    "header": {
+      "title": "Some landing page title",
+      "logo": "imageSRC",
+      "links": [
+        {
+          "home": "linktohome"
+        },
+        {
+          "contact": "linktocontact"
+        }
+      ]
+    },
+    "hero": {
+      "title": "Title",
+      "subtitle": "Subtitle",
+      "CTAbutton": {
+        "text": "Enter App",
+        "link": "buttonlink"
+      }
+    },
+    "features": {
+      "title": "Feature Title",
+      "featureList": [
+        "feature1",
+        "feature2"
+      ]
+    },
+    "banner": {
+      "title": "Feature Title",
+    },
+    "footer": {
+      "logo": "imageSRC",
+      "links": [
+        {
+          "home": "linktohome"
+        },
+        {
+          "contact": "linktocontact"
+        }
+      ]
+    }
+  }
+}
