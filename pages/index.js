@@ -3,23 +3,38 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Button from "../components/Button";
+import Input from "../components/Input";
 
 export default function Home() {
   const [array, setArray] = useState([
-    { text: "Hello I'm the 1st component" },
-    { text: "Hello I'm the 2nd component" },
-    { text: "Hello I'm the 3rd component" },
+    {
+      title: "Hello I'm the 1st component",
+      inputFields: [
+        { label: "Title", value: "" },
+        { label: "Subtitle", value: "" },
+      ],
+    },
+    {
+      title: "Hello I'm the 2nd component",
+      inputFields: [
+        { label: "Title", value: "" },
+        { label: "Subtitle", value: "" },
+      ],
+    },
+    { title: "Hello I'm the 3rd component" },
   ]);
   const [counter, setCounter] = useState(0);
+  const [title, setTitle] = useState("");
 
   const addComponent = () => {
-    array.push({ text: `added component ${counter}` });
-    setArray([...array]);
+    array.push({ title: `added component ${counter}` });
     setCounter(counter + 1);
+    setArray([...array]);
   };
 
   const remove = (index) => {
     array.splice(index, 1);
+    setCounter(counter - 1);
     setArray([...array]);
   };
 
@@ -36,34 +51,22 @@ export default function Home() {
     setArray([...array]);
   };
 
-  // const moveUp = (index) => {
-  //   if (index === 0) {
-  //     return;
-  //   }
-  //   [array[index], array[index - 1]] = [array[index - 1], array[index]];
-  //   console.log(array);
-  //   setArray([...array]);
-  // };
-
   const moveDown = (index) => {
     if (index === array.length - 1) {
       return;
     }
 
     const itemAtIndex = array[index];
-    // const itemAtIndexPlusOne = array[index + 1];
 
     array.splice(index, 1, array[index + 1]);
     array.splice(index + 1, 1, itemAtIndex);
 
-    console.log(array, "down");
     setArray([...array]);
   };
 
-  // move down button with Array.prototype functions
-  // add component some fields that I can edit e.g. title, subtitle
-  // type of the component
-  // push it to the repo
+  const handleChange = (e) => {
+    console.log(e.target.value, "e");
+  };
 
   return (
     <div className={styles.container}>
@@ -75,22 +78,39 @@ export default function Home() {
 
       <main className={styles.main}>
         <div className="p-8">
-          <button
-            className="flex sm:inline-flex justify-center items-center bg-green-500 hover:bg-green-600 active:bg-green-700 focus-visible:ring ring-green-300 text-white font-semibold text-center rounded-md outline-none transition duration-100 px-5 py-2"
-            onClick={addComponent}
-          >
-            + Add component +
-          </button>
+          <Button onClick={addComponent} color="green">
+            Add component +
+          </Button>
         </div>
 
         <div>
           {array.map((a, index) => (
             <div key={index} className="m-6 font-bold">
-              <p className="text-2xl">{a.text}</p>
+              <p className="text-2xl">{a.title}</p>
 
-              <Button onClick={() => moveUp(index)}> Move Up ↑</Button>
+              {a.inputFields &&
+                a.inputFields.map((input, i) => (
+                  <Input
+                    key={i}
+                    placeholder={input.label}
+                    id={i}
+                    type="text"
+                    onChange={handleChange}
+                    // onChange={(e) => setTitle(e.target.title)}
+                  />
+                ))}
+
+              {/* <input
+                type="text"
+                value={a.title}
+                onChange={(e) => setTitle(e.target.title)}
+              /> */}
+
+              <Button onClick={() => moveUp(index)}>Move Up ↑</Button>
               <Button onClick={() => moveDown(index)}>Move Down ↓</Button>
-              <Button onClick={() => remove(index)}>- Delete -</Button>
+              <Button onClick={() => remove(index)} color="red">
+                Delete -
+              </Button>
             </div>
           ))}
         </div>
