@@ -3,28 +3,28 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Button from "../components/Button";
-import Input from "../components/Input";
+import Form from "../components/Form";
 
 export default function Home() {
   const [array, setArray] = useState([
     {
       title: "Hello I'm the 1st component",
       inputFields: [
-        { label: "Title", value: "" },
-        { label: "Subtitle", value: "" },
+        { label: "1st Title", value: "" },
+        { label: "1st Subtitle", value: "" },
       ],
     },
     {
       title: "Hello I'm the 2nd component",
       inputFields: [
-        { label: "Title", value: "" },
-        { label: "Subtitle", value: "" },
+        { label: "2nd Title", value: "" },
+        { label: "2nd Subtitle", value: "" },
+        { label: "2nd Subtitle", value: "" },
       ],
     },
     { title: "Hello I'm the 3rd component" },
   ]);
   const [counter, setCounter] = useState(0);
-  const [title, setTitle] = useState("");
 
   const addComponent = () => {
     array.push({ title: `added component ${counter}` });
@@ -64,10 +64,6 @@ export default function Home() {
     setArray([...array]);
   };
 
-  const handleChange = (e) => {
-    console.log(e.target.value, "e");
-  };
-
   return (
     <div className={styles.container}>
       <Head>
@@ -84,31 +80,18 @@ export default function Home() {
         </div>
 
         <div>
-          {array.map((a, index) => (
-            <div key={index} className="m-6 font-bold">
+          {array.map((a, componentIndex) => (
+            <div key={componentIndex} className="m-6 font-bold">
               <p className="text-2xl">{a.title}</p>
 
-              {a.inputFields &&
-                a.inputFields.map((input, i) => (
-                  <Input
-                    key={i}
-                    placeholder={input.label}
-                    id={i}
-                    type="text"
-                    onChange={handleChange}
-                    // onChange={(e) => setTitle(e.target.title)}
-                  />
-                ))}
-
-              {/* <input
-                type="text"
-                value={a.title}
-                onChange={(e) => setTitle(e.target.title)}
-              /> */}
-
-              <Button onClick={() => moveUp(index)}>Move Up ↑</Button>
-              <Button onClick={() => moveDown(index)}>Move Down ↓</Button>
-              <Button onClick={() => remove(index)} color="red">
+              {array[componentIndex].inputFields && (
+                <Form order={componentIndex} array={array} />
+              )}
+              <Button onClick={() => moveUp(componentIndex)}>Move Up ↑</Button>
+              <Button onClick={() => moveDown(componentIndex)}>
+                Move Down ↓
+              </Button>
+              <Button onClick={() => remove(componentIndex)} color="red">
                 Delete -
               </Button>
             </div>
