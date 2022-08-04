@@ -6,7 +6,7 @@ const Form = (props) => {
   const [state, setState] = useState([...array[order].inputFields]);
 
   return (
-    <form>
+    <form className="">
       {array[order].inputFields &&
         array[order].inputFields.map((input, inputIndex) => {
           return (

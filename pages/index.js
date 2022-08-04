@@ -11,17 +11,17 @@ export default function Home() {
         {
           label: "Product",
           value: "",
-          style: "text-sm float-left m-4 underline",
+          style: "text-sm m-4 underline inline max-w-max",
         },
         {
           label: "Resources",
           value: "",
-          style: "text-sm float-left m-4 underline",
+          style: "text-sm m-4 underline inline max-w-max",
         },
         {
           label: "Pricing",
           value: "",
-          style: "text-sm float-left m-4 underline",
+          style: "text-sm m-4 underline inline max-w-max",
         },
       ],
     },
@@ -50,7 +50,7 @@ export default function Home() {
         },
         {
           label:
-            "We've built an innovative approach that utilizes cross-platform viral AI and machine learning to revolutionize your bullshit generating experience.",
+            "We've built an innovative approach that utilizes cross-platform viral AI and machine learning to revolutionize your bullshit generating experience. We've built an innovative approach that utilizes cross-platform viral AI and machine learning to revolutionize your bullshit generating experience.",
           value: "",
           style: "mt-4 text-base leading-7 text-slate-700 font-normal",
         },
@@ -122,6 +122,19 @@ export default function Home() {
     setArray([...array]);
   };
 
+  const sectionStyle = (type) => {
+    if (type === "header") {
+      return "h-20  border-b flex items-center";
+    } else if (type === "hero") {
+      return "h-80";
+    } else if (type === "content") {
+      return "h-60";
+    } else if (type === "footer") {
+      return "h-32 border-t";
+    } else {
+      return "h-32";
+    }
+  };
   return (
     <div className="">
       <Head>
@@ -130,7 +143,32 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="px-6">
+      <main className="">
+        <div className="">
+          {array.map((a, componentIndex) => (
+            <div
+              key={componentIndex}
+              className={`${sectionStyle(a.type)} w-full px-6`}
+            >
+              {array[componentIndex].inputFields && (
+                <Form
+                  order={componentIndex}
+                  array={array}
+                  isEditView={isEditView}
+                />
+              )}
+              {isEditView && (
+                <div className="absolute z-10 right-0 space-x-2">
+                  <Button onClick={() => moveUp(componentIndex)}>↑</Button>
+                  <Button onClick={() => moveDown(componentIndex)}>↓</Button>
+                  <Button onClick={() => remove(componentIndex)} color="red">
+                    -
+                  </Button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
         <div className="">
           <button
             title="Edit page"
@@ -146,33 +184,6 @@ export default function Home() {
           >
             &#43;
           </button>
-        </div>
-
-        <div>
-          {array.map((a, componentIndex) => (
-            <div key={componentIndex} className="w-full h-60">
-              {array[componentIndex].inputFields && (
-                <Form
-                  order={componentIndex}
-                  array={array}
-                  isEditView={isEditView}
-                />
-              )}
-              {isEditView && (
-                <div className="space-x-2">
-                  <Button onClick={() => moveUp(componentIndex)}>
-                    Move Up ↑
-                  </Button>
-                  <Button onClick={() => moveDown(componentIndex)}>
-                    Move Down ↓
-                  </Button>
-                  <Button onClick={() => remove(componentIndex)} color="red">
-                    Delete -
-                  </Button>
-                </div>
-              )}
-            </div>
-          ))}
         </div>
       </main>
     </div>
