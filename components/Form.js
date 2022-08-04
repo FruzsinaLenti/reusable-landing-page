@@ -2,7 +2,7 @@ import Input from "./Input";
 import { useState } from "react";
 
 const Form = (props) => {
-  const { order, array } = props;
+  const { order, array, style } = props;
   const [state, setState] = useState([...array[order].inputFields]);
 
   return (
@@ -20,6 +20,7 @@ const Form = (props) => {
             }
             name={input.label}
             value={array[order].inputFields[inputIndex].value}
+            style={input.style}
           />
         ))}
     </form>
