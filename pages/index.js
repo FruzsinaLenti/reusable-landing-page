@@ -2,16 +2,27 @@ import React, { useState } from "react";
 import Head from "next/head";
 import Button from "../components/Button";
 import Form from "../components/Form";
-import Input from "../components/Input";
 
 export default function Home() {
   const [array, setArray] = useState([
     {
       type: "header",
       inputFields: [
-        { label: "Product", value: "", style: "text-sm float-left m-4" },
-        { label: "Resources", value: "", style: "text-sm float-left m-4" },
-        { label: "Pricing", value: "", style: "text-sm float-left m-4" },
+        {
+          label: "Product",
+          value: "",
+          style: "text-sm float-left m-4 underline",
+        },
+        {
+          label: "Resources",
+          value: "",
+          style: "text-sm float-left m-4 underline",
+        },
+        {
+          label: "Pricing",
+          value: "",
+          style: "text-sm float-left m-4 underline",
+        },
       ],
     },
     {
@@ -39,7 +50,7 @@ export default function Home() {
         },
         {
           label:
-            "We've built an innovative approach that utilizes cross-platform viral AI and machine learning to revolutionize your bullshit generating experience…",
+            "We've built an innovative approach that utilizes cross-platform viral AI and machine learning to revolutionize your bullshit generating experience.",
           value: "",
           style: "mt-4 text-base leading-7 text-slate-700 font-normal",
         },
@@ -58,7 +69,6 @@ export default function Home() {
   ]);
   const [counter, setCounter] = useState(0);
   const [isEditView, setEditView] = useState(false);
-  const [input, setInput] = useState(false);
 
   const addComponent = () => {
     array.push({
@@ -125,7 +135,7 @@ export default function Home() {
           <button
             title="Edit page"
             onClick={() => setEditView(!isEditView)}
-            className="fixed z-90 bottom-10 right-8 bg-blue-600 w-20 h-20 rounded-full drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl"
+            className="fixed z-90 bottom-10 right-8 bg-black w-20 h-20 rounded-full drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl"
           >
             &#9998;
           </button>
@@ -136,20 +146,20 @@ export default function Home() {
           >
             &#43;
           </button>
-          {/* <Button onClick={addComponent} color="black">
-            Add component +
-          </Button>
-          <Button onClick={() => setEditView(!isEditView)}>Edit page</Button> */}
         </div>
 
-        {isEditView ? (
-          <div>
-            {array.map((a, componentIndex) => (
-              <div key={componentIndex} className="h-60">
-                {array[componentIndex].inputFields && (
-                  <Form order={componentIndex} array={array} />
-                )}
-                <div>
+        <div>
+          {array.map((a, componentIndex) => (
+            <div key={componentIndex} className="w-full h-60">
+              {array[componentIndex].inputFields && (
+                <Form
+                  order={componentIndex}
+                  array={array}
+                  isEditView={isEditView}
+                />
+              )}
+              {isEditView && (
+                <div className="space-x-2">
                   <Button onClick={() => moveUp(componentIndex)}>
                     Move Up ↑
                   </Button>
@@ -160,42 +170,11 @@ export default function Home() {
                     Delete -
                   </Button>
                 </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div>
-            {array.map((a, componentIndex) => (
-              <div key={componentIndex} className="w-full h-60">
-                {a.inputFields &&
-                  a.inputFields.map((input, index) => (
-                    <div key={index} className={`${input.style}`}>
-                      {input.label}
-                    </div>
-                  ))}
-              </div>
-            ))}
-          </div>
-        )}
-      </main>
-
-      <footer className="border-t">
-        <div className="py-14 flex flex-col lg:flex-row items-center">
-          {array.map((a, index) => (
-            <div key={index}>
-              {a.type === "footer" && (
-                <Input
-                  type="text"
-                  placeholder="Footer"
-                  onChange={(e) => console.log(e.target.value)}
-                  value=""
-                  style="font-bold text-center text-black"
-                />
               )}
             </div>
           ))}
         </div>
-      </footer>
+      </main>
     </div>
   );
 }
