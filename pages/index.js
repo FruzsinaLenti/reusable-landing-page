@@ -17,7 +17,11 @@ export default function Home() {
     {
       type: "hero",
       inputFields: [
-        { label: "Welcome on my website", value: "", style: "text-8xl" },
+        {
+          label: "Welcome on my website",
+          value: "",
+          style: "text-8xl font-bold",
+        },
         {
           label: "Deliver transparent web-readiness",
           value: "",
@@ -108,8 +112,6 @@ export default function Home() {
     setArray([...array]);
   };
 
-  const inputHandler = () => {};
-
   return (
     <div className="">
       <Head>
@@ -118,18 +120,32 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="">
-        <div className="sticky top-0 bg-white border-b border-accent-2">
-          <Button onClick={addComponent} color="black">
+      <main className="px-6">
+        <div className="">
+          <button
+            title="Edit page"
+            onClick={() => setEditView(!isEditView)}
+            className="fixed z-90 bottom-10 right-8 bg-blue-600 w-20 h-20 rounded-full drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl"
+          >
+            &#9998;
+          </button>
+          <button
+            title="Add component"
+            onClick={addComponent}
+            className="fixed z-90 bottom-10 right-32 bg-blue-600 w-20 h-20 rounded-full drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl"
+          >
+            &#43;
+          </button>
+          {/* <Button onClick={addComponent} color="black">
             Add component +
           </Button>
-          <Button onClick={() => setEditView(!isEditView)}>Edit page</Button>
+          <Button onClick={() => setEditView(!isEditView)}>Edit page</Button> */}
         </div>
 
         {isEditView ? (
           <div>
             {array.map((a, componentIndex) => (
-              <div key={componentIndex} className="h-60 ">
+              <div key={componentIndex} className="h-60">
                 {array[componentIndex].inputFields && (
                   <Form order={componentIndex} array={array} />
                 )}
@@ -150,7 +166,7 @@ export default function Home() {
         ) : (
           <div>
             {array.map((a, componentIndex) => (
-              <div key={componentIndex} className="w-full m-6 font-bold h-60">
+              <div key={componentIndex} className="w-full h-60">
                 {a.inputFields &&
                   a.inputFields.map((input, index) => (
                     <div key={index} className={`${input.style}`}>
@@ -163,23 +179,21 @@ export default function Home() {
         )}
       </main>
 
-      <footer className="bg-accent-1 border-t border-accent-2">
-        <div className="container mx-auto px-5">
-          <div className="py-14 flex flex-col lg:flex-row items-center">
-            {array.map((a, index) => (
-              <div key={index}>
-                {a.type === "footer" && (
-                  <Input
-                    type="text"
-                    placeholder="Footer"
-                    onChange={(e) => console.log(e.target.value)}
-                    value=""
-                    style="font-bold tracking-tighter leading-tight text-center"
-                  />
-                )}
-              </div>
-            ))}
-          </div>
+      <footer className="border-t">
+        <div className="py-14 flex flex-col lg:flex-row items-center">
+          {array.map((a, index) => (
+            <div key={index}>
+              {a.type === "footer" && (
+                <Input
+                  type="text"
+                  placeholder="Footer"
+                  onChange={(e) => console.log(e.target.value)}
+                  value=""
+                  style="font-bold text-center text-black"
+                />
+              )}
+            </div>
+          ))}
         </div>
       </footer>
     </div>
