@@ -5,25 +5,23 @@ const Form = (props) => {
   const { order, array, isEditView } = props;
   const [state, setState] = useState([...array[order].inputFields]);
 
+  const handleOnChange = (inputIndex) => (e) => {
+    array[order].inputFields[inputIndex].label = e.target.value;
+  };
+
   return (
     <form className="">
       {array[order].inputFields &&
         array[order].inputFields.map((input, inputIndex) => {
           return (
-            <>
+            <div key={inputIndex}>
               {isEditView ? (
                 <Input
                   key={inputIndex}
-                  type="text"
+                  type="textarea"
                   placeholder={input.label}
-                  onChange={(e) =>
-                    setState([
-                      (array[order].inputFields[inputIndex].value =
-                        e.target.value),
-                    ])
-                  }
-                  name={input.label}
-                  value={array[order].inputFields[inputIndex].value}
+                  onChange={handleOnChange(inputIndex)}
+                  value={state.value}
                   style={input.style}
                 />
               ) : (
@@ -31,7 +29,7 @@ const Form = (props) => {
                   {input.label}
                 </div>
               )}
-            </>
+            </div>
           );
         })}
     </form>
