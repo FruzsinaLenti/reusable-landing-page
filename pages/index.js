@@ -1,98 +1,84 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import Button from "../components/Button";
 import Form from "../components/Form";
+import FloatingButton from "../components/FloatingButton";
 
 export default function Home() {
-  const [array, setArray] = useState([
-    {
-      type: "header",
-      inputFields: [
-        {
-          label: "Product",
-          value: "",
-          style: "text-sm m-4 underline inline max-w-max",
-        },
-        {
-          label: "Resources",
-          value: "",
-          style: "text-sm m-4 underline inline max-w-max",
-        },
-        {
-          label: "Pricing",
-          value: "",
-          style: "text-sm m-4 underline inline max-w-max",
-        },
-      ],
-    },
-    {
-      type: "hero",
-      inputFields: [
-        {
-          label: "Welcome on my website",
-          value: "",
-          style: "text-8xl font-bold",
-        },
-        {
-          label: "Deliver transparent web-readiness",
-          value: "",
-          style: "text-4xl mt-4 text-base text-slate-700 font-normal",
-        },
-      ],
-    },
-    {
-      type: "content",
-      inputFields: [
-        {
-          label: "Content disintermediate visionary functionalities",
-          value: "",
-          style: "text-4xl mt-4 font-extrabold tracking-tight text-slate-900",
-        },
-        {
-          label:
-            "We've built an innovative approach that utilizes cross-platform viral AI and machine learning to revolutionize your bullshit generating experience. We've built an innovative approach that utilizes cross-platform viral AI and machine learning to revolutionize your bullshit generating experience.",
-          value: "",
-          style: "mt-4 text-base leading-7 text-slate-700 font-normal",
-        },
-      ],
-    },
-    {
-      type: "footer",
-      inputFields: [
-        {
-          label: "Footer",
-          value: "",
-          style: "text-4xl mt-4 font-extrabold tracking-tight text-slate-900",
-        },
-      ],
-    },
-  ]);
-  const [counter, setCounter] = useState(0);
+  const [array, setArray] = useState([]);
   const [isEditView, setEditView] = useState(false);
+  const [isMoveView, setMoveView] = useState(false);
 
   const addComponent = () => {
     array.push({
       inputFields: [
         {
-          label: `New title`,
+          label: "New title",
           value: "",
           style: "text-4xl mt-4 font-extrabold tracking-tight text-slate-900",
         },
         {
           label:
-            "The Bullshit Generator is an innovative tool that utilizes cross-platform viral AI  bullshit generati",
+            "The generator is an innovative tool that utilizes cross-platform viral AI generation",
           value: "",
           style: "mt-4 text-base leading-7 text-slate-700 font-normal",
         },
       ],
     });
-    setCounter(counter + 1);
     setArray([...array]);
+  };
+
+  const componentType = (type) => {
+    if (type === "hero") {
+      array.push({
+        type: "hero",
+        inputFields: [
+          {
+            label: "Welcome on my website",
+            value: "",
+            style: "text-8xl font-bold",
+          },
+          {
+            label: "Deliver transparent web-readiness",
+            value: "",
+            style: "text-4xl mt-4 text-base text-slate-700 font-normal",
+          },
+        ],
+      });
+      setArray([...array]);
+    } else {
+      array.push({
+        type: "content",
+        inputFields: [
+          {
+            label: "New title",
+            value: "",
+            style: "text-4xl mt-4 font-extrabold tracking-tight text-slate-900",
+          },
+          {
+            label:
+              "The generator is an innovative tool that utilizes cross-platform viral AI generation",
+            value: "",
+            style: "mt-4 text-base leading-7 text-slate-700 font-normal",
+          },
+        ],
+      });
+      setArray([...array]);
+    }
+  };
+
+  const handleEditView = () => {
+    setArray([...array]);
+    setEditView(!isEditView);
+  };
+
+  const handleMoveView = () => {
+    setArray([...array]);
+    setMoveView(!isMoveView);
   };
 
   const remove = (index) => {
     array.splice(index, 1);
-    setCounter(counter - 1);
     setArray([...array]);
   };
 
@@ -135,6 +121,7 @@ export default function Home() {
       return "h-32";
     }
   };
+
   return (
     <div className="">
       <Head>
@@ -157,7 +144,7 @@ export default function Home() {
                   isEditView={isEditView}
                 />
               )}
-              {isEditView && (
+              {isMoveView && (
                 <div className="absolute z-10 right-0 space-x-2">
                   <Button onClick={() => moveUp(componentIndex)}>↑</Button>
                   <Button onClick={() => moveDown(componentIndex)}>↓</Button>
@@ -170,20 +157,39 @@ export default function Home() {
           ))}
         </div>
         <div className="">
-          <button
-            title="Edit page"
-            onClick={() => setEditView(!isEditView)}
-            className="fixed z-90 bottom-10 right-8 bg-black w-20 h-20 rounded-full drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl"
+          {array.length !== 0 && (
+            <>
+              <FloatingButton
+                isDisabled={isMoveView}
+                onClick={handleEditView}
+                styles="bottom-10 right-8"
+              >
+                Edit
+              </FloatingButton>
+              <FloatingButton
+                isDisabled={isEditView}
+                onClick={handleMoveView}
+                styles="bottom-10 right-32"
+              >
+                Move
+              </FloatingButton>
+            </>
+          )}
+
+          <FloatingButton
+            onClick={() => componentType("hero")}
+            color="blue"
+            styles="bottom-32 left-8"
           >
-            &#9998;
-          </button>
-          <button
-            title="Add component"
-            onClick={addComponent}
-            className="fixed z-90 bottom-10 right-32 bg-blue-600 w-20 h-20 rounded-full drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl"
+            Hero
+          </FloatingButton>
+          <FloatingButton
+            onClick={() => componentType("content")}
+            color="blue"
+            styles="bottom-10 left-8"
           >
-            &#43;
-          </button>
+            Content
+          </FloatingButton>
         </div>
       </main>
     </div>
