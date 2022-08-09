@@ -1,5 +1,5 @@
 const FloatingButton = ({ children, isDisabled, onClick, color, styles }) => {
-  const style = () => {
+  const computedStyle = () => {
     if (color === "blue") {
       return "bg-blue-600";
     } else {
@@ -15,7 +15,7 @@ const FloatingButton = ({ children, isDisabled, onClick, color, styles }) => {
     <button
       disabled={isDisabled}
       onClick={onClick}
-      className={`${style()} ${styles} ${isActive()} fixed z-90 w-20 h-20 rounded-full drop-shadow-lg flex justify-center items-center text-white text-xl hover:drop-shadow-4xl hover:bg-blue-700`}
+      className={`${computedStyle()} ${styles} ${isActive()} fixed z-90 w-20 h-20 rounded-full drop-shadow-lg flex justify-center items-center text-white text-xl hover:drop-shadow-4xl hover:bg-blue-700`}
     >
       {children}
     </button>

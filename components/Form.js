@@ -10,7 +10,7 @@ const Form = (props) => {
   };
 
   return (
-    <form className="">
+    <form>
       {array[order].inputFields &&
         array[order].inputFields.map((input, inputIndex) => {
           return (
