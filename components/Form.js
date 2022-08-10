@@ -2,17 +2,17 @@ import Input from "./Input";
 import { useState } from "react";
 
 const Form = (props) => {
-  const { order, array, isEditView } = props;
-  const [state, setState] = useState([...array[order].inputFields]);
+  const { order, content, isEditView } = props;
+  const [state, setState] = useState([...content[order].inputFields]);
 
   const handleOnChange = (inputIndex) => (e) => {
-    array[order].inputFields[inputIndex].label = e.target.value;
+    content[order].inputFields[inputIndex].label = e.target.value;
   };
 
   return (
     <form>
-      {array[order].inputFields &&
-        array[order].inputFields.map((input, inputIndex) => {
+      {content[order].inputFields &&
+        content[order].inputFields.map((input, inputIndex) => {
           return (
             <div key={inputIndex}>
               {isEditView ? (

@@ -1,4 +1,3 @@
-// https://dev.to/ms_yogii/form-inputs-with-react-and-tailwind-57o2
 const Input = (props) => {
   const {
     id,

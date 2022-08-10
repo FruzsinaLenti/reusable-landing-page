@@ -3,15 +3,17 @@ import Head from "next/head";
 import Button from "../components/Button";
 import Form from "../components/Form";
 import FloatingButton from "../components/FloatingButton";
+import Navbar from "../components/Navbar";
 
 export default function Home() {
-  const [array, setArray] = useState([]);
+  const [contentArray, setContentArray] = useState([]);
   const [isEditView, setEditView] = useState(false);
   const [isMoveView, setMoveView] = useState(false);
 
   const addSection = (type) => {
+    let arr = contentArray;
     if (type === "hero") {
-      array.push({
+      arr.push({
         type: "hero",
         inputFields: [
           {
@@ -26,9 +28,26 @@ export default function Home() {
           },
         ],
       });
-      setArray([...array]);
+      setContentArray([...arr]);
+    } else if (type === "navbar") {
+      arr.push({
+        type: "navbar",
+        inputFields: [
+          {
+            label: "New title",
+            value: "",
+            style: "text-4xl mt-4 font-extrabold tracking-tight text-slate-900",
+          },
+          {
+            label:
+              "The generator is an innovative tool that utilizes cross-platform viral AI generation",
+            value: "",
+            style: "mt-4 text-base leading-7 text-slate-700 font-normal",
+          },
+        ],
+      });
     } else {
-      array.push({
+      arr.push({
         type: "content",
         inputFields: [
           {
@@ -44,23 +63,26 @@ export default function Home() {
           },
         ],
       });
-      setArray([...array]);
+      setContentArray([...arr]);
     }
   };
 
   const handleEditView = () => {
-    setArray([...array]);
+    setContentArray([...contentArray]);
     setEditView(!isEditView);
   };
 
   const handleMoveView = () => {
-    setArray([...array]);
+    setContentArray([...contentArray]);
     setMoveView(!isMoveView);
   };
 
   const remove = (index) => {
-    array.splice(index, 1);
-    setArray([...array]);
+    // contentArray.splice(index, 1);
+    // setContentArray([...contentArray]);
+
+    const arr = contentArray;
+    setContentArray([...arr.slice(0, index), ...arr.slice(index + 1)]);
   };
 
   const moveUp = (index) => {
@@ -68,25 +90,27 @@ export default function Home() {
       return;
     }
 
-    const itemAtIndex = array[index];
+    const itemAtIndex = contentArray[index];
+    const arr = contentArray;
 
-    array.splice(index, 1, array[index - 1]);
-    array.splice(index - 1, 1, itemAtIndex);
+    arr.splice(index, 1, arr[index - 1]);
+    arr.splice(index - 1, 1, itemAtIndex);
 
-    setArray([...array]);
+    setContentArray([...arr]);
   };
 
   const moveDown = (index) => {
-    if (index === array.length - 1) {
+    if (index === contentArray.length - 1) {
       return;
     }
 
-    const itemAtIndex = array[index];
+    const itemAtIndex = contentArray[index];
+    const arr = contentArray;
 
-    array.splice(index, 1, array[index + 1]);
-    array.splice(index + 1, 1, itemAtIndex);
+    arr.splice(index, 1, arr[index + 1]);
+    arr.splice(index + 1, 1, itemAtIndex);
 
-    setArray([...array]);
+    setContentArray([...arr]);
   };
 
   const sectionStyle = (type) => {
@@ -113,15 +137,20 @@ export default function Home() {
 
       <main>
         <div>
-          {array.map((a, componentIndex) => (
+          {contentArray.map((a, componentIndex) => {
+            <div key={componentIndex}>{a.type === "navbar" && <Navbar />}</div>;
+          })}
+        </div>
+        <div>
+          {contentArray.map((a, componentIndex) => (
             <div
               key={componentIndex}
               className={`${sectionStyle(a.type)} w-full px-6`}
             >
-              {array[componentIndex].inputFields && (
+              {contentArray[componentIndex].inputFields && (
                 <Form
                   order={componentIndex}
-                  array={array}
+                  content={contentArray}
                   isEditView={isEditView}
                 />
               )}
@@ -138,7 +167,7 @@ export default function Home() {
           ))}
         </div>
         <div>
-          {array.length !== 0 && (
+          {contentArray.length !== 0 && (
             <>
               <FloatingButton
                 isDisabled={isMoveView}
@@ -157,6 +186,13 @@ export default function Home() {
             </>
           )}
 
+          <FloatingButton
+            onClick={() => addSection("navbar")}
+            color="blue"
+            styles="bottom-64 left-8"
+          >
+            Navbar
+          </FloatingButton>
           <FloatingButton
             onClick={() => addSection("hero")}
             color="blue"
