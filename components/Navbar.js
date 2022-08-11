@@ -1,11 +1,13 @@
 const Navbar = (props) => {
-  const {} = props;
+  const { items } = props;
 
   return (
-    <nav>
-      <div className="text-sm m-4 underline inline max-w-max">Product</div>
-      <div className="text-sm m-4 underline inline max-w-max">Resources</div>
-      <div className="text-sm m-4 underline inline max-w-max">Pricing</div>
+    <nav className="w-full border-b-2">
+      {items.map((item, index) => (
+        <div key={index} className="text-sm m-4 underline inline max-w-max">
+          {item.label}
+        </div>
+      ))}
     </nav>
   );
 };

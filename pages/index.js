@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import Head from "next/head";
 import Button from "../components/Button";
-import Form from "../components/Form";
+import { Form, NavForm } from "../components/Form";
 import FloatingButton from "../components/FloatingButton";
 import Navbar from "../components/Navbar";
 
 export default function Home() {
   const [contentArray, setContentArray] = useState([]);
   const [isEditView, setEditView] = useState(false);
-  const [isMoveView, setMoveView] = useState(false);
+  // const [isMoveView, setMoveView] = useState(false);
+  const [nav, setNav] = useState("");
+  const [show, setShow] = useState(true);
 
   const addSection = (type) => {
     let arr = contentArray;
@@ -17,14 +19,14 @@ export default function Home() {
         type: "hero",
         inputFields: [
           {
-            label: "Welcome on my website",
+            label: "Website",
             value: "",
-            style: "text-8xl font-bold",
+            // style: "text-8xl font-bold",
           },
           {
             label: "Deliver transparent web-readiness",
             value: "",
-            style: "text-4xl mt-4 text-base text-slate-700 font-normal",
+            // style: "text-4xl mt-4 text-base text-slate-700 font-normal",
           },
         ],
       });
@@ -32,20 +34,17 @@ export default function Home() {
     } else if (type === "navbar") {
       arr.push({
         type: "navbar",
-        inputFields: [
+        content: [
           {
-            label: "New title",
-            value: "",
-            style: "text-4xl mt-4 font-extrabold tracking-tight text-slate-900",
+            label: "Product",
           },
           {
-            label:
-              "The generator is an innovative tool that utilizes cross-platform viral AI generation",
-            value: "",
-            style: "mt-4 text-base leading-7 text-slate-700 font-normal",
+            label: "Pricing",
           },
         ],
       });
+      setContentArray([...arr]);
+      setShow(false);
     } else {
       arr.push({
         type: "content",
@@ -72,16 +71,16 @@ export default function Home() {
     setEditView(!isEditView);
   };
 
-  const handleMoveView = () => {
-    setContentArray([...contentArray]);
-    setMoveView(!isMoveView);
-  };
+  // const handleMoveView = () => {
+  //   setContentArray([...contentArray]);
+  //   setMoveView(!isMoveView);
+  // };
 
   const remove = (index) => {
     // contentArray.splice(index, 1);
     // setContentArray([...contentArray]);
 
-    const arr = contentArray;
+    const arr = [...contentArray];
     setContentArray([...arr.slice(0, index), ...arr.slice(index + 1)]);
   };
 
@@ -91,7 +90,7 @@ export default function Home() {
     }
 
     const itemAtIndex = contentArray[index];
-    const arr = contentArray;
+    const arr = [...contentArray];
 
     arr.splice(index, 1, arr[index - 1]);
     arr.splice(index - 1, 1, itemAtIndex);
@@ -105,7 +104,7 @@ export default function Home() {
     }
 
     const itemAtIndex = contentArray[index];
-    const arr = contentArray;
+    const arr = [...contentArray];
 
     arr.splice(index, 1, arr[index + 1]);
     arr.splice(index + 1, 1, itemAtIndex);
@@ -113,18 +112,24 @@ export default function Home() {
     setContentArray([...arr]);
   };
 
-  const sectionStyle = (type) => {
-    if (type === "header") {
-      return "h-20  border-b flex items-center";
-    } else if (type === "hero") {
-      return "h-80";
-    } else if (type === "content") {
-      return "h-60";
-    } else if (type === "footer") {
-      return "h-32 border-t";
-    } else {
-      return "h-32";
-    }
+  const addNavbarLink = (index) => {
+    let arr = [...contentArray];
+    arr[index].content.push({
+      label: "Link",
+    });
+    setContentArray([...arr]);
+  };
+
+  const getNavbar = () => {
+    const newArr = contentArray.find((content) => content.type === "navbar");
+    return newArr;
+  };
+
+  const onSubmitNav = (index) => (message) => {
+    let arr = [...contentArray];
+    arr[index].content = [...message];
+    setContentArray([...arr]);
+    setEditView(!isEditView);
   };
 
   return (
@@ -136,63 +141,61 @@ export default function Home() {
       </Head>
 
       <main>
-        <div>
-          {contentArray.map((a, componentIndex) => {
-            <div key={componentIndex}>{a.type === "navbar" && <Navbar />}</div>;
-          })}
-        </div>
-        <div>
-          {contentArray.map((a, componentIndex) => (
-            <div
-              key={componentIndex}
-              className={`${sectionStyle(a.type)} w-full px-6`}
-            >
-              {contentArray[componentIndex].inputFields && (
-                <Form
-                  order={componentIndex}
-                  content={contentArray}
-                  isEditView={isEditView}
-                />
-              )}
-              {isMoveView && (
-                <div className="absolute z-10 right-0 space-x-2">
-                  <Button onClick={() => moveUp(componentIndex)}>↑</Button>
-                  <Button onClick={() => moveDown(componentIndex)}>↓</Button>
-                  <Button onClick={() => remove(componentIndex)} color="red">
-                    -
-                  </Button>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+        {contentArray.map((a, componentIndex) => {
+          if (a.type === "navbar") {
+            return (
+              <div key={componentIndex}>
+                {!isEditView && <Navbar items={a.content} />}
+                {getNavbar() && isEditView && (
+                  <div className="space-x-2">
+                    <NavForm
+                      content={getNavbar().content}
+                      onSubmit={onSubmitNav(componentIndex)}
+                    />
+                    <Button onClick={() => remove(componentIndex)}>x</Button>
+                    <Button onClick={() => addNavbarLink(componentIndex)}>
+                      +
+                    </Button>
+                  </div>
+                )}
+              </div>
+            );
+          } else {
+            return (
+              <div key={componentIndex} className={` w-full px-6`}>
+                {contentArray[componentIndex].inputFields && (
+                  <Form
+                    order={componentIndex}
+                    content={contentArray}
+                    isEditView={isEditView}
+                  />
+                )}
+                {isEditView && (
+                  <div className="absolute z-10 right-0 space-x-2">
+                    <Button onClick={() => moveUp(componentIndex)}>↑</Button>
+                    <Button onClick={() => moveDown(componentIndex)}>↓</Button>
+                    <Button onClick={() => remove(componentIndex)}>X</Button>
+                  </div>
+                )}
+              </div>
+            );
+          }
+        })}
         <div>
           {contentArray.length !== 0 && (
-            <>
-              <FloatingButton
-                isDisabled={isMoveView}
-                onClick={handleEditView}
-                styles="bottom-10 right-8"
-              >
-                Edit
-              </FloatingButton>
-              <FloatingButton
-                isDisabled={isEditView}
-                onClick={handleMoveView}
-                styles="bottom-10 right-32"
-              >
-                Move
-              </FloatingButton>
-            </>
+            <FloatingButton onClick={handleEditView} styles="bottom-10 right-8">
+              Edit
+            </FloatingButton>
           )}
-
-          <FloatingButton
-            onClick={() => addSection("navbar")}
-            color="blue"
-            styles="bottom-64 left-8"
-          >
-            Navbar
-          </FloatingButton>
+          {getNavbar() === undefined && (
+            <FloatingButton
+              onClick={() => addSection("navbar")}
+              color="blue"
+              styles="bottom-56 left-8"
+            >
+              Add Navbar
+            </FloatingButton>
+          )}
           <FloatingButton
             onClick={() => addSection("hero")}
             color="blue"

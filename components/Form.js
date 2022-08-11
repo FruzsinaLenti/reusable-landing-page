@@ -1,5 +1,40 @@
 import Input from "./Input";
 import { useState } from "react";
+import Button from "./Button";
+
+export const NavForm = (props) => {
+  const { content, onSubmit } = props;
+  const [state, setState] = useState({});
+
+  const handleChange = (index) => (event) => {
+    const newArr = [...content];
+    newArr[index].label = event.target.value;
+    setState(newArr);
+  };
+
+  const handleClick = (event) => {
+    event.preventDefault();
+    onSubmit(state);
+  };
+
+  return (
+    <form>
+      {content &&
+        content.map((input, index) => {
+          return (
+            <div key={index} className="bg-red-300">
+              <Input
+                type="textarea"
+                onChange={handleChange(index)}
+                value={input.label}
+              />
+            </div>
+          );
+        })}
+      <Button onClick={handleClick}>Save</Button>
+    </form>
+  );
+};
 
 const Form = (props) => {
   const { order, content, isEditView } = props;
