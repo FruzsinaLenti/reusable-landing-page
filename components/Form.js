@@ -22,7 +22,7 @@ export const NavForm = (props) => {
       {content &&
         content.map((input, index) => {
           return (
-            <div key={index} className="bg-red-300">
+            <div key={index} className="h-20">
               <Input
                 type="textarea"
                 onChange={handleChange(index)}

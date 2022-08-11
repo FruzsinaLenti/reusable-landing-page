@@ -1,12 +1,17 @@
 const Hero = (props) => {
-  const {} = props;
+  const { items } = props;
+
+  console.log("items", items);
 
   return (
-    <nav className="">
-      <div className="text-center text-lg mt-5">Product</div>
-      <div className="text-sm m-4 underline inline max-w-max">Resources</div>
-      <div className="text-sm m-4 underline inline max-w-max">Pricing</div>
-    </nav>
+    <section className="flex-col md:flex-row flex items-center md:justify-between mt-16 mb-16 md:mb-12">
+      <div className="text-center font-bold text-8xl mt-5">
+        {items[0].label}
+      </div>
+      <div className="text-center md:text-left text-lg mt-5 md:pl-8">
+        {items[1].label}
+      </div>
+    </section>
   );
 };
 

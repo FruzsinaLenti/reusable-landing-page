@@ -4,61 +4,55 @@ import Button from "../components/Button";
 import { Form, NavForm } from "../components/Form";
 import FloatingButton from "../components/FloatingButton";
 import Navbar from "../components/Navbar";
+import Hero from "../components/Hero";
 
 export default function Home() {
   const [contentArray, setContentArray] = useState([]);
   const [isEditView, setEditView] = useState(false);
-  // const [isMoveView, setMoveView] = useState(false);
-  const [nav, setNav] = useState("");
-  const [show, setShow] = useState(true);
 
   const addSection = (type) => {
-    let arr = contentArray;
-    if (type === "hero") {
-      arr.push({
-        type: "hero",
-        inputFields: [
-          {
-            label: "Website",
-            value: "",
-            // style: "text-8xl font-bold",
-          },
-          {
-            label: "Deliver transparent web-readiness",
-            value: "",
-            // style: "text-4xl mt-4 text-base text-slate-700 font-normal",
-          },
-        ],
-      });
-      setContentArray([...arr]);
-    } else if (type === "navbar") {
-      arr.push({
-        type: "navbar",
-        content: [
-          {
-            label: "Product",
-          },
-          {
-            label: "Pricing",
-          },
-        ],
-      });
-      setContentArray([...arr]);
-      setShow(false);
+    let arr = [...contentArray];
+
+    if (type === "navbar") {
+      setContentArray([
+        {
+          type: "navbar",
+          content: [
+            {
+              label: "Product",
+            },
+            {
+              label: "Pricing",
+            },
+          ],
+        },
+        ...contentArray,
+      ]);
+    } else if (type === "hero") {
+      setContentArray([
+        ...contentArray,
+        {
+          type: "hero",
+          content: [
+            {
+              label: "Website",
+            },
+            {
+              label: "Deliver transparent web-readiness",
+            },
+          ],
+        },
+      ]);
     } else {
       arr.push({
         type: "content",
-        inputFields: [
+        content: [
           {
             label: "New title",
-            value: "",
-            style: "text-4xl mt-4 font-extrabold tracking-tight text-slate-900",
           },
           {
             label:
               "The generator is an innovative tool that utilizes cross-platform viral AI generation",
-            value: "",
-            style: "mt-4 text-base leading-7 text-slate-700 font-normal",
           },
         ],
       });
@@ -70,11 +64,6 @@ export default function Home() {
     setContentArray([...contentArray]);
     setEditView(!isEditView);
   };
-
-  // const handleMoveView = () => {
-  //   setContentArray([...contentArray]);
-  //   setMoveView(!isMoveView);
-  // };
 
   const remove = (index) => {
     // contentArray.splice(index, 1);
@@ -126,6 +115,7 @@ export default function Home() {
   };
 
   const onSubmitNav = (index) => (message) => {
+    console.log("message", message);
     let arr = [...contentArray];
     arr[index].content = [...message];
     setContentArray([...arr]);
@@ -141,40 +131,55 @@ export default function Home() {
       </Head>
 
       <main>
-        {contentArray.map((a, componentIndex) => {
+        {contentArray.map((a, index) => {
           if (a.type === "navbar") {
             return (
-              <div key={componentIndex}>
+              <div key={index}>
                 {!isEditView && <Navbar items={a.content} />}
                 {getNavbar() && isEditView && (
-                  <div className="space-x-2">
+                  <div className="space-x-2 gap-4">
                     <NavForm
                       content={getNavbar().content}
-                      onSubmit={onSubmitNav(componentIndex)}
+                      onSubmit={onSubmitNav(index)}
                     />
-                    <Button onClick={() => remove(componentIndex)}>x</Button>
-                    <Button onClick={() => addNavbarLink(componentIndex)}>
-                      +
-                    </Button>
+                    <Button onClick={() => remove(index)}>x</Button>
+                    <Button onClick={() => addNavbarLink(index)}>+</Button>
+                  </div>
+                )}
+              </div>
+            );
+          } else if (a.type === "hero") {
+            return (
+              <div key={index} className="container mx-auto px-5 w-full">
+                {!isEditView && <Hero items={a.content} />}
+                {isEditView && (
+                  <div className="space-x-2">
+                    <NavForm
+                      content={contentArray[index].content}
+                      onSubmit={onSubmitNav(index)}
+                    />
+                    <Button onClick={() => moveUp(index)}>↑</Button>
+                    <Button onClick={() => moveDown(index)}>↓</Button>
+                    <Button onClick={() => remove(index)}>X</Button>
                   </div>
                 )}
               </div>
             );
           } else {
             return (
-              <div key={componentIndex} className={` w-full px-6`}>
-                {contentArray[componentIndex].inputFields && (
+              <div key={index} className={` w-full px-6`}>
+                {contentArray[index].inputFields && (
                   <Form
-                    order={componentIndex}
+                    order={index}
                     content={contentArray}
                     isEditView={isEditView}
                   />
                 )}
                 {isEditView && (
                   <div className="absolute z-10 right-0 space-x-2">
-                    <Button onClick={() => moveUp(componentIndex)}>↑</Button>
-                    <Button onClick={() => moveDown(componentIndex)}>↓</Button>
-                    <Button onClick={() => remove(componentIndex)}>X</Button>
+                    <Button onClick={() => moveUp(index)}>↑</Button>
+                    <Button onClick={() => moveDown(index)}>↓</Button>
+                    <Button onClick={() => remove(index)}>X</Button>
                   </div>
                 )}
               </div>
@@ -196,20 +201,24 @@ export default function Home() {
               Add Navbar
             </FloatingButton>
           )}
-          <FloatingButton
-            onClick={() => addSection("hero")}
-            color="blue"
-            styles="bottom-32 left-8"
-          >
-            Hero
-          </FloatingButton>
-          <FloatingButton
-            onClick={() => addSection("content")}
-            color="blue"
-            styles="bottom-10 left-8"
-          >
-            Content
-          </FloatingButton>
+          {!isEditView && (
+            <>
+              <FloatingButton
+                onClick={() => addSection("hero")}
+                color="blue"
+                styles="bottom-32 left-8"
+              >
+                Hero
+              </FloatingButton>
+              <FloatingButton
+                onClick={() => addSection("content")}
+                color="blue"
+                styles="bottom-10 left-8"
+              >
+                Content
+              </FloatingButton>
+            </>
+          )}
         </div>
       </main>
     </div>
