@@ -43,51 +43,16 @@ export const InlineEdit = ({ value, setValue }) => {
   );
 };
 
-export const NavForm = ({ content, onSubmit, onAdd, onDelete }) => {
-  const [state, setState] = useState({});
-
-  const handleChange = (index) => (event) => {
-    const newArr = [...content];
-    newArr[index].label = event.target.value;
-    setState(newArr);
-  };
-
-  const handleClick = (event) => {
-    event.preventDefault();
-    onSubmit(state);
-  };
-
-  return (
-    <form className="p-6 space-y-2 w-full border-2">
-      {content &&
-        content.map((input, index) => {
-          return (
-            <div key={index} className="">
-              <input
-                onChange={handleChange(index)}
-                value={input.label}
-                className=" form-control px-3 py-1.5 w-full text-gray-800 border border-solid border-gray-300 transition ease-in-out"
-              />
-            </div>
-          );
-        })}
-      <div className="space-x-2">
-        <Button onClick={handleClick}>Save</Button>
-        <Button onClick={onAdd}>Add</Button>
-        <Button onClick={onDelete}>Delete</Button>
-      </div>
-    </form>
-  );
-};
-
 export const Form = ({
   content,
   onSubmit,
   onClickMoveUp,
   onClickMoveDown,
   onClickRemove,
+  onAdd,
+  onAddCard,
 }) => {
-  const [state, setState] = useState({});
+  const [state, setState] = useState([]);
 
   const textAreaRef = useRef(null);
 
@@ -109,7 +74,7 @@ export const Form = ({
       {content &&
         content.map((input, index) => {
           return (
-            <div key={index} className="">
+            <div key={index}>
               <textarea
                 rows={1}
                 onChange={handleChange(index)}
@@ -121,10 +86,12 @@ export const Form = ({
           );
         })}
       <div className="space-x-2">
-        <Button onClick={handleClick}>Save</Button>
-        <Button onClick={onClickMoveUp}>↑</Button>
-        <Button onClick={onClickMoveDown}>↓</Button>
-        <Button onClick={onClickRemove}>X</Button>
+        {handleClick && <Button onClick={handleClick}>Save</Button>}
+        {onClickMoveUp && <Button onClick={onClickMoveUp}>↑</Button>}
+        {onClickMoveDown && <Button onClick={onClickMoveDown}>↓</Button>}
+        {onAdd && <Button onClick={onAdd}>Add Link</Button>}
+        {onAddCard && <Button onClick={onAddCard}>Add Card</Button>}
+        <Button onClick={onClickRemove}>x</Button>
       </div>
     </form>
   );

@@ -5,6 +5,7 @@ import { Form, NavForm, InlineEdit } from "../components/Form";
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import AboutUs from "../components/AboutUs";
+import Pricing from "../components/Pricing";
 import Cards from "../components/Cards";
 import Footer from "../components/Footer";
 
@@ -44,7 +45,7 @@ export default function Home() {
           type: "hero",
           content: [
             {
-              label: "Website",
+              label: "Website.",
             },
             {
               label: "Deliver transparent web-readiness",
@@ -74,11 +75,34 @@ export default function Home() {
         {
           type: "pricing",
           content: [
+            { label: "Free" },
             {
-              label: "Free",
+              label:
+                "The generator is an innovative tool that utilizes cross-platform viral AI generation",
             },
             {
-              label: "Discounted",
+              label: "Plan",
+            },
+            {
+              label:
+                "The generator is an innovative tool that utilizes cross-platform viral AI generation",
+            },
+          ],
+        },
+      ]);
+    } else if (type === "cards") {
+      setContentArray([
+        ...contentArray,
+        {
+          type: "cards",
+          content: [
+            {
+              title: "Card title",
+              text: "The generator is an innovative tool that utilizes cross-platform viral AI generation",
+            },
+            {
+              title: "Card title",
+              text: "The generator is an innovative tool that utilizes cross-platform viral AI generation",
             },
           ],
         },
@@ -156,6 +180,7 @@ export default function Home() {
 
   const onSubmitNav = (index) => (message) => {
     let arr = [...contentArray];
+    console.log("nav", message);
     arr[index].content = [...message];
     setContentArray([...arr]);
     setEditView(!isEditView);
@@ -168,6 +193,31 @@ export default function Home() {
 
     setContentArray([...arr]);
 
+    setEditView(!isEditView);
+  };
+
+  const addCard = (index) => {
+    let arr = [...contentArray];
+    arr[index].content.push({
+      title: "New Card",
+      text: "New Card text",
+    });
+
+    console.log("");
+    setContentArray([...arr]);
+  };
+
+  const onSubmitCards = (index) => (message) => {
+    let arr = [...contentArray];
+    arr[index].content = [...message];
+    setContentArray([...arr]);
+    setEditView(!isEditView);
+  };
+
+  const onSubmitPricing = (index) => (message) => {
+    let arr = [...contentArray];
+    arr[index].content = [...message];
+    setContentArray([...arr]);
     setEditView(!isEditView);
   };
 
@@ -187,10 +237,11 @@ export default function Home() {
                 {!isEditView && <Navbar items={a.content} />}
                 {getNavbar() && isEditView && (
                   <div className="space-x-2 gap-4">
-                    <NavForm
+                    <label>Navbar</label>
+                    <Form
                       content={getNavbar().content}
                       onSubmit={onSubmitNav(index)}
-                      onDelete={() => remove(index)}
+                      onClickRemove={() => remove(index)}
                       onAdd={() => addNavbarLink(index)}
                     />
                   </div>
@@ -203,6 +254,7 @@ export default function Home() {
                 {!isEditView && <Hero items={a.content} />}
                 {isEditView && (
                   <div className="my-4 space-x-2">
+                    <label>Hero</label>
                     <Form
                       content={contentArray[index].content}
                       onSubmit={onSubmitNav(index)}
@@ -220,6 +272,7 @@ export default function Home() {
                 {!isEditView && <AboutUs items={a.content} />}
                 {isEditView && (
                   <div className="my-4 space-x-2">
+                    <label>About Us</label>
                     <Form
                       content={contentArray[index].content}
                       onSubmit={onSubmitAboutUs(index)}
@@ -231,11 +284,41 @@ export default function Home() {
                 )}
               </div>
             );
-          } else if (a.type === "content") {
+          } else if (a.type === "pricing") {
             return (
               <div key={index} className="w-full container mx-auto px-5">
-                {/* <InlineEdit value={value} setValue={setValue} /> */}
-                <Cards items={a.content} />
+                {!isEditView && <Pricing items={a.content} />}
+                {isEditView && (
+                  <div className="my-4 space-x-2">
+                    <label>Pricing</label>
+                    <Form
+                      content={contentArray[index].content}
+                      onSubmit={onSubmitPricing(index)}
+                      onClickMoveUp={() => moveUp(index)}
+                      onClickMoveDown={() => moveDown(index)}
+                      onClickRemove={() => remove(index)}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          } else if (a.type === "cards") {
+            return (
+              <div key={index} className="w-full container mx-auto px-5">
+                {!isEditView && <Cards items={a.content} />}
+                {isEditView && (
+                  <div className="my-4 space-x-2">
+                    <label>Cards</label>
+                    <Form
+                      content={contentArray[index].content}
+                      onSubmit={onSubmitCards(index)}
+                      onClickMoveUp={() => moveUp(index)}
+                      onClickMoveDown={() => moveDown(index)}
+                      onAddCard={() => addCard(index)}
+                      onClickRemove={() => remove(index)}
+                    />
+                  </div>
+                )}
               </div>
             );
           } else {
@@ -278,20 +361,36 @@ export default function Home() {
           />
         )}
         <aside
-          className={`sidebar ${
-            isOpen == true ? "active" : ""
-          } w-64 fixed right-0 top-0 opacity-75 `}
+          className="w-64 fixed right-0 top-0 opacity-75 py-4"
           aria-label="Sidebar"
         >
           {isOpen ? (
             <div className="overflow-y-auto py-4 px-3 bg-gray-50 dark:bg-gray-800">
               <ul className="space-y-2">
-                <li className="w-full flex justify-end">
+                <li className="w-full flex justify-end bg-blue-900">
                   <button
                     onClick={toggleSidebar}
-                    className=" p-2 text-base font-bold text-gray-900  transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                    type="button"
+                    className="flex items-center p-2 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                   >
-                    x
+                    <span className="flex-1 text-left whitespace-nowrap">
+                      Page Builder Menu
+                    </span>
+
+                    <span className="sr-only">Close</span>
+                    <svg
+                      aria-hidden="true"
+                      className="w-4 h-4"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
                   </button>
                 </li>
                 <li>
@@ -299,17 +398,11 @@ export default function Home() {
                     onClick={handleEditView}
                     type="button"
                     className="flex items-center p-2 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                    aria-controls="dropdown-example"
-                    data-collapse-toggle="dropdown-example"
                   >
-                    <span
-                      className="flex-1 text-left whitespace-nowrap"
-                      sidebar-toggle-item
-                    >
+                    <span className="flex-1 text-left whitespace-nowrap">
                       Add page content
                     </span>
                     <svg
-                      sidebar-toggle-item
                       className="w-6 h-6"
                       fill="currentColor"
                       viewBox="0 0 20 20"
@@ -342,10 +435,18 @@ export default function Home() {
                       </li>
                       <li>
                         <button
-                          onClick={() => addSection("content")}
+                          onClick={() => addSection("pricing")}
                           className="flex items-center p-2 pl-11 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                         >
-                          Content
+                          Pricing
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() => addSection("cards")}
+                          className="flex items-center p-2 pl-11 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                        >
+                          Cards
                         </button>
                       </li>
                     </ul>
@@ -395,7 +496,7 @@ export default function Home() {
               data-collapse-toggle="dropdown-example"
             >
               <span className="flex-1 ml-3 text-left whitespace-nowrap text-white ">
-                Open menu
+                Open Page Builder Menu
               </span>
               <svg
                 sidebar-toggle-item
