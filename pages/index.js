@@ -11,7 +11,13 @@ import Footer from "../components/Footer";
 export default function Home() {
   const [contentArray, setContentArray] = useState([]);
   const [isEditView, setEditView] = useState(false);
-  const [value, setValue] = useState();
+  const [hasFooter, setFooter] = useState(false);
+  const [isOpen, setIsopen] = useState(true);
+
+  const toggleSidebar = () => {
+    // isOpen === true ? setIsopen(false) : setIsopen(true);
+    setIsopen(!isOpen);
+  };
 
   const addSection = (type) => {
     let arr = [...contentArray];
@@ -73,27 +79,6 @@ export default function Home() {
             },
             {
               label: "Discounted",
-            },
-          ],
-        },
-      ]);
-    } else if (type === "footer") {
-      setContentArray([
-        ...contentArray,
-        {
-          type: "footer",
-          content: [
-            {
-              label: "About",
-            },
-            {
-              label: "Help",
-            },
-            {
-              label: "Terms",
-            },
-            {
-              label: "Privacy",
             },
           ],
         },
@@ -170,10 +155,19 @@ export default function Home() {
   };
 
   const onSubmitNav = (index) => (message) => {
-    console.log("message", message);
     let arr = [...contentArray];
     arr[index].content = [...message];
     setContentArray([...arr]);
+    setEditView(!isEditView);
+  };
+
+  const onSubmitAboutUs = (index) => (message) => {
+    let arr = [...contentArray];
+
+    arr[index].content = [...message];
+
+    setContentArray([...arr]);
+
     setEditView(!isEditView);
   };
 
@@ -196,9 +190,9 @@ export default function Home() {
                     <NavForm
                       content={getNavbar().content}
                       onSubmit={onSubmitNav(index)}
+                      onDelete={() => remove(index)}
+                      onAdd={() => addNavbarLink(index)}
                     />
-                    <Button onClick={() => remove(index)}>x</Button>
-                    <Button onClick={() => addNavbarLink(index)}>+</Button>
                   </div>
                 )}
               </div>
@@ -208,14 +202,14 @@ export default function Home() {
               <div key={index} className="container mx-auto px-5 w-full">
                 {!isEditView && <Hero items={a.content} />}
                 {isEditView && (
-                  <div className="space-x-2">
-                    <NavForm
+                  <div className="my-4 space-x-2">
+                    <Form
                       content={contentArray[index].content}
                       onSubmit={onSubmitNav(index)}
+                      onClickMoveUp={() => moveUp(index)}
+                      onClickMoveDown={() => moveDown(index)}
+                      onClickRemove={() => remove(index)}
                     />
-                    <Button onClick={() => moveUp(index)}>↑</Button>
-                    <Button onClick={() => moveDown(index)}>↓</Button>
-                    <Button onClick={() => remove(index)}>X</Button>
                   </div>
                 )}
               </div>
@@ -225,36 +219,24 @@ export default function Home() {
               <div key={index} className="container mx-auto px-5 w-full">
                 {!isEditView && <AboutUs items={a.content} />}
                 {isEditView && (
-                  <div className="space-x-2">
-                    <NavForm
+                  <div className="my-4 space-x-2">
+                    <Form
                       content={contentArray[index].content}
-                      onSubmit={onSubmitNav(index)}
+                      onSubmit={onSubmitAboutUs(index)}
+                      onClickMoveUp={() => moveUp(index)}
+                      onClickMoveDown={() => moveDown(index)}
+                      onClickRemove={() => remove(index)}
                     />
-                    <Button onClick={() => moveUp(index)}>↑</Button>
-                    <Button onClick={() => moveDown(index)}>↓</Button>
-                    <Button onClick={() => remove(index)}>X</Button>
                   </div>
                 )}
               </div>
             );
           } else if (a.type === "content") {
             return (
-              <div
-                key={index}
-                className="bg-red-300 w-full container mx-auto px-5"
-              >
+              <div key={index} className="w-full container mx-auto px-5">
                 {/* <InlineEdit value={value} setValue={setValue} /> */}
                 <Cards items={a.content} />
               </div>
-            );
-          } else if (a.type === "footer") {
-            return (
-              <footer
-                key={index}
-                className=" bg-accent-1 border-t border-accent-2"
-              >
-                <Footer items={a.content} />
-              </footer>
             );
           } else {
             return (
@@ -277,105 +259,159 @@ export default function Home() {
             );
           }
         })}
-        <aside className="w-64 absolute right-0 top-0" aria-label="Sidebar">
-          <div className="overflow-y-auto py-4 px-3 bg-gray-50 rounded dark:bg-gray-800">
-            <ul className="space-y-2">
-              <li>
-                <button
-                  onClick={handleEditView}
-                  type="button"
-                  className="flex items-center p-2 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                  aria-controls="dropdown-example"
-                  data-collapse-toggle="dropdown-example"
-                >
-                  <span
-                    className="flex-1 ml-3 text-left whitespace-nowrap"
-                    sidebar-toggle-item
-                  >
-                    Sections
-                  </span>
-                  <svg
-                    sidebar-toggle-item
-                    className="w-6 h-6"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
-                </button>
-                {!isEditView && (
-                  <ul className="py-2 space-y-2">
-                    <li>
-                      <button
-                        onClick={() => addSection("hero")}
-                        className="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                      >
-                        Hero
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        onClick={() => addSection("aboutUs")}
-                        className="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                      >
-                        About Us
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        onClick={() => addSection("content")}
-                        className="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                      >
-                        Content
-                      </button>
-                    </li>
-                  </ul>
-                )}
-              </li>
-
-              {contentArray.findIndex(
-                (content) => content.type === "navbar"
-              ) === -1 && (
-                <li className="w-full">
+        {hasFooter && (
+          <Footer
+            items={[
+              {
+                label: "About",
+              },
+              {
+                label: "Help",
+              },
+              {
+                label: "Terms",
+              },
+              {
+                label: "Privacy",
+              },
+            ]}
+          />
+        )}
+        <aside
+          className={`sidebar ${
+            isOpen == true ? "active" : ""
+          } w-64 fixed right-0 top-0 opacity-75 `}
+          aria-label="Sidebar"
+        >
+          {isOpen ? (
+            <div className="overflow-y-auto py-4 px-3 bg-gray-50 dark:bg-gray-800">
+              <ul className="space-y-2">
+                <li className="w-full flex justify-end">
                   <button
-                    onClick={() => addSection("navbar")}
-                    className="w-full flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                    onClick={toggleSidebar}
+                    className=" p-2 text-base font-bold text-gray-900  transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                   >
-                    <span className="flex-1 ml-3 whitespace-nowrap">
-                      Navbar
-                    </span>
+                    x
                   </button>
                 </li>
-              )}
-              {contentArray.findIndex(
-                (content) => content.type === "footer"
-              ) === -1 && (
-                <li>
-                  <button
-                    onClick={() => addSection("footer")}
-                    className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    Footer
-                  </button>
-                </li>
-              )}
-              {contentArray.length !== 0 && (
                 <li>
                   <button
                     onClick={handleEditView}
-                    className="w-full flex items-center justify-start p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                    type="button"
+                    className="flex items-center p-2 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                    aria-controls="dropdown-example"
+                    data-collapse-toggle="dropdown-example"
                   >
-                    <span className="flex-1 whitespace-nowrap">Edit</span>
+                    <span
+                      className="flex-1 text-left whitespace-nowrap"
+                      sidebar-toggle-item
+                    >
+                      Add page content
+                    </span>
+                    <svg
+                      sidebar-toggle-item
+                      className="w-6 h-6"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
                   </button>
+                  {!isEditView && (
+                    <ul className="py-2 space-y-2">
+                      <li>
+                        <button
+                          onClick={() => addSection("hero")}
+                          className="flex items-center p-2 pl-11 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                        >
+                          Hero
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() => addSection("aboutUs")}
+                          className="flex items-center p-2 pl-11 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                        >
+                          About Us
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() => addSection("content")}
+                          className="flex items-center p-2 pl-11 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                        >
+                          Content
+                        </button>
+                      </li>
+                    </ul>
+                  )}
                 </li>
-              )}
-            </ul>
-          </div>
+
+                {contentArray.findIndex(
+                  (content) => content.type === "navbar"
+                ) === -1 && (
+                  <li className="w-full flex justify-start">
+                    <button
+                      onClick={() => addSection("navbar")}
+                      className="w-full p-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      Navbar
+                    </button>
+                  </li>
+                )}
+                {!hasFooter && (
+                  <li className="w-full flex justify-start">
+                    <button
+                      onClick={() => setFooter(true)}
+                      className="w-full p-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      Footer
+                    </button>
+                  </li>
+                )}
+                {contentArray.length !== 0 && (
+                  <li className="border-t border-gray-200">
+                    <button
+                      onClick={handleEditView}
+                      className="w-full flex items-center justify-start p-2 text-base text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      <span className="flex-1 whitespace-nowrap">Edit</span>
+                    </button>
+                  </li>
+                )}
+              </ul>
+            </div>
+          ) : (
+            <button
+              onClick={toggleSidebar}
+              type="button"
+              className=" bg-gray-900 flex items-center p-2 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+              aria-controls="dropdown-example"
+              data-collapse-toggle="dropdown-example"
+            >
+              <span className="flex-1 ml-3 text-left whitespace-nowrap text-white ">
+                Open menu
+              </span>
+              <svg
+                sidebar-toggle-item
+                className="w-6 h-6"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                ></path>
+              </svg>
+            </button>
+          )}
         </aside>
       </main>
     </div>
