@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import Head from "next/head";
 import Button from "../components/Button";
-import { Form, NavForm } from "../components/Form";
+import { Form, NavForm, InlineEdit } from "../components/Form";
 import FloatingButton from "../components/FloatingButton";
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
+import AboutUs from "../components/AboutUs";
+import Cards from "../components/Cards";
+import Footer from "../components/Footer";
 
 export default function Home() {
   const [contentArray, setContentArray] = useState([]);
   const [isEditView, setEditView] = useState(false);
+  const [value, setValue] = useState();
 
   const addSection = (type) => {
     let arr = [...contentArray];
@@ -39,6 +43,58 @@ export default function Home() {
             },
             {
               label: "Deliver transparent web-readiness",
+            },
+          ],
+        },
+      ]);
+    } else if (type === "aboutUs") {
+      setContentArray([
+        ...contentArray,
+        {
+          type: "aboutUs",
+          content: [
+            {
+              label: "Deliver Transparent Web-readiness Generation",
+            },
+            {
+              label:
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quid dubitas igitur mutare principia naturae? Ita multo sanguine profuso in laetitia et in victoria est mortuus. Omnia contraria, quos etiam insanos esse vultis. Hinc ceteri particulas arripere conati suam quisque videro voluit afferre sententiam. Quis non odit sordidos, vanos, leves, futtiles? Quasi ego id curem, quid ille aiat aut neget.",
+            },
+          ],
+        },
+      ]);
+    } else if (type === "pricing") {
+      setContentArray([
+        ...contentArray,
+        {
+          type: "pricing",
+          content: [
+            {
+              label: "Free",
+            },
+            {
+              label: "Discounted",
+            },
+          ],
+        },
+      ]);
+    } else if (type === "footer") {
+      setContentArray([
+        ...contentArray,
+        {
+          type: "footer",
+          content: [
+            {
+              label: "About",
+            },
+            {
+              label: "Help",
+            },
+            {
+              label: "Terms",
+            },
+            {
+              label: "Privacy",
             },
           ],
         },
@@ -165,6 +221,42 @@ export default function Home() {
                 )}
               </div>
             );
+          } else if (a.type === "aboutUs") {
+            return (
+              <div key={index} className="container mx-auto px-5 w-full">
+                {!isEditView && <AboutUs items={a.content} />}
+                {isEditView && (
+                  <div className="space-x-2">
+                    <NavForm
+                      content={contentArray[index].content}
+                      onSubmit={onSubmitNav(index)}
+                    />
+                    <Button onClick={() => moveUp(index)}>↑</Button>
+                    <Button onClick={() => moveDown(index)}>↓</Button>
+                    <Button onClick={() => remove(index)}>X</Button>
+                  </div>
+                )}
+              </div>
+            );
+          } else if (a.type === "content") {
+            return (
+              <div
+                key={index}
+                className="bg-red-300 w-full container mx-auto px-5"
+              >
+                {/* <InlineEdit value={value} setValue={setValue} /> */}
+                <Cards items={a.content} />
+              </div>
+            );
+          } else if (a.type === "footer") {
+            return (
+              <footer
+                key={index}
+                className=" bg-accent-1 border-t border-accent-2"
+              >
+                <Footer items={a.content} />
+              </footer>
+            );
           } else {
             return (
               <div key={index} className={` w-full px-6`}>
@@ -188,17 +280,28 @@ export default function Home() {
         })}
         <div>
           {contentArray.length !== 0 && (
-            <FloatingButton onClick={handleEditView} styles="bottom-10 right-8">
+            <FloatingButton onClick={handleEditView} styles="bottom-6 right-8">
               Edit
             </FloatingButton>
           )}
-          {getNavbar() === undefined && (
+          {contentArray.findIndex((content) => content.type === "navbar") ===
+            -1 && (
             <FloatingButton
               onClick={() => addSection("navbar")}
               color="blue"
-              styles="bottom-56 left-8"
+              styles="bottom-32 left-8"
             >
               Add Navbar
+            </FloatingButton>
+          )}
+          {contentArray.findIndex((content) => content.type === "footer") ===
+            -1 && (
+            <FloatingButton
+              onClick={() => addSection("footer")}
+              color="blue"
+              styles="bottom-32 left-32"
+            >
+              Add Footer
             </FloatingButton>
           )}
           {!isEditView && (
@@ -206,14 +309,21 @@ export default function Home() {
               <FloatingButton
                 onClick={() => addSection("hero")}
                 color="blue"
-                styles="bottom-32 left-8"
+                styles="bottom-6 left-8"
               >
                 Hero
               </FloatingButton>
               <FloatingButton
+                onClick={() => addSection("aboutUs")}
+                color="blue"
+                styles="bottom-6 left-32"
+              >
+                About Us
+              </FloatingButton>
+              <FloatingButton
                 onClick={() => addSection("content")}
                 color="blue"
-                styles="bottom-10 left-8"
+                styles="bottom-6 left-56"
               >
                 Content
               </FloatingButton>

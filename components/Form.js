@@ -2,6 +2,33 @@ import Input from "./Input";
 import { useState } from "react";
 import Button from "./Button";
 
+export const InlineEdit = ({ value, setValue }) => {
+  const [editingValue, setEditingValue] = useState(value);
+
+  const onChange = (event) => setEditingValue(event.target.value);
+
+  const onKeyDown = (event) => {
+    if (event.key === "Enter" || event.key === "Escape") {
+      event.target.blur();
+    }
+  };
+
+  const onBlur = (event) => {
+    setValue(event.target.value);
+  };
+
+  return (
+    <input
+      type="text"
+      aria-label="Field name"
+      value={editingValue}
+      onChange={onChange}
+      onKeyDown={onKeyDown}
+      onBlur={onBlur}
+    />
+  );
+};
+
 export const NavForm = (props) => {
   const { content, onSubmit } = props;
   const [state, setState] = useState({});
@@ -18,11 +45,11 @@ export const NavForm = (props) => {
   };
 
   return (
-    <form>
+    <form className="bg-gray-200 border-2">
       {content &&
         content.map((input, index) => {
           return (
-            <div key={index} className="h-20">
+            <div key={index} className="">
               <Input
                 type="textarea"
                 onChange={handleChange(index)}
