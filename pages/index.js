@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Head from "next/head";
 import Button from "../components/Button";
 import { Form, NavForm, InlineEdit } from "../components/Form";
-import FloatingButton from "../components/FloatingButton";
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import AboutUs from "../components/AboutUs";
@@ -278,58 +277,106 @@ export default function Home() {
             );
           }
         })}
-        <div>
-          {contentArray.length !== 0 && (
-            <FloatingButton onClick={handleEditView} styles="bottom-6 right-8">
-              Edit
-            </FloatingButton>
-          )}
-          {contentArray.findIndex((content) => content.type === "navbar") ===
-            -1 && (
-            <FloatingButton
-              onClick={() => addSection("navbar")}
-              color="blue"
-              styles="bottom-32 left-8"
-            >
-              Add Navbar
-            </FloatingButton>
-          )}
-          {contentArray.findIndex((content) => content.type === "footer") ===
-            -1 && (
-            <FloatingButton
-              onClick={() => addSection("footer")}
-              color="blue"
-              styles="bottom-32 left-32"
-            >
-              Add Footer
-            </FloatingButton>
-          )}
-          {!isEditView && (
-            <>
-              <FloatingButton
-                onClick={() => addSection("hero")}
-                color="blue"
-                styles="bottom-6 left-8"
-              >
-                Hero
-              </FloatingButton>
-              <FloatingButton
-                onClick={() => addSection("aboutUs")}
-                color="blue"
-                styles="bottom-6 left-32"
-              >
-                About Us
-              </FloatingButton>
-              <FloatingButton
-                onClick={() => addSection("content")}
-                color="blue"
-                styles="bottom-6 left-56"
-              >
-                Content
-              </FloatingButton>
-            </>
-          )}
-        </div>
+        <aside className="w-64 absolute right-0 top-0" aria-label="Sidebar">
+          <div className="overflow-y-auto py-4 px-3 bg-gray-50 rounded dark:bg-gray-800">
+            <ul className="space-y-2">
+              <li>
+                <button
+                  onClick={handleEditView}
+                  type="button"
+                  className="flex items-center p-2 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                  aria-controls="dropdown-example"
+                  data-collapse-toggle="dropdown-example"
+                >
+                  <span
+                    className="flex-1 ml-3 text-left whitespace-nowrap"
+                    sidebar-toggle-item
+                  >
+                    Sections
+                  </span>
+                  <svg
+                    sidebar-toggle-item
+                    className="w-6 h-6"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                </button>
+                {!isEditView && (
+                  <ul className="py-2 space-y-2">
+                    <li>
+                      <button
+                        onClick={() => addSection("hero")}
+                        className="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                      >
+                        Hero
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => addSection("aboutUs")}
+                        className="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                      >
+                        About Us
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => addSection("content")}
+                        className="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                      >
+                        Content
+                      </button>
+                    </li>
+                  </ul>
+                )}
+              </li>
+
+              {contentArray.findIndex(
+                (content) => content.type === "navbar"
+              ) === -1 && (
+                <li className="w-full">
+                  <button
+                    onClick={() => addSection("navbar")}
+                    className="w-full flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <span className="flex-1 ml-3 whitespace-nowrap">
+                      Navbar
+                    </span>
+                  </button>
+                </li>
+              )}
+              {contentArray.findIndex(
+                (content) => content.type === "footer"
+              ) === -1 && (
+                <li>
+                  <button
+                    onClick={() => addSection("footer")}
+                    className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Footer
+                  </button>
+                </li>
+              )}
+              {contentArray.length !== 0 && (
+                <li>
+                  <button
+                    onClick={handleEditView}
+                    className="w-full flex items-center justify-start p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <span className="flex-1 whitespace-nowrap">Edit</span>
+                  </button>
+                </li>
+              )}
+            </ul>
+          </div>
+        </aside>
       </main>
     </div>
   );
