@@ -16,7 +16,6 @@ export default function Home() {
   const [isOpen, setIsopen] = useState(true);
 
   const toggleSidebar = () => {
-    // isOpen === true ? setIsopen(false) : setIsopen(true);
     setIsopen(!isOpen);
   };
 
@@ -107,7 +106,30 @@ export default function Home() {
           ],
         },
       ]);
-    } else {
+    }
+    // else if (type === "footer") {
+    //   setContentArray([
+    //     ...contentArray,
+    //     {
+    //       type: "footer",
+    //       content: [
+    //         {
+    //           label: "About",
+    //         },
+    //         {
+    //           label: "Help",
+    //         },
+    //         {
+    //           label: "Terms",
+    //         },
+    //         {
+    //           label: "Privacy",
+    //         },
+    //       ],
+    //     },
+    //   ]);
+    // }
+    else {
       arr.push({
         type: "content",
         content: [
@@ -155,7 +177,6 @@ export default function Home() {
     if (index === contentArray.length - 1) {
       return;
     }
-
     const itemAtIndex = contentArray[index];
     const arr = [...contentArray];
 
@@ -167,24 +188,52 @@ export default function Home() {
 
   const addNavbarLink = (index) => {
     let arr = [...contentArray];
+
     arr[index].content.push({
       label: "Link",
     });
+
     setContentArray([...arr]);
   };
 
+  // const addFooterLink = () => {
+  //   // let arr = [...contentArray];
+  //   // arr[arr.length - 1].content.push({
+  //   //   label: "Link",
+  //   // });
+  //   // setContentArray([...arr]);
+  //   // setFooter(true);
+  // };
+
   const getNavbar = () => {
     const newArr = contentArray.find((content) => content.type === "navbar");
+
     return newArr;
   };
 
+  // const getFooter = () => {
+  //   const newArr = contentArray.find((content) => content.type === "footer");
+
+  //   return newArr;
+  // };
+
   const onSubmitNav = (index) => (message) => {
     let arr = [...contentArray];
-    console.log("nav", message);
     arr[index].content = [...message];
     setContentArray([...arr]);
     setEditView(!isEditView);
   };
+
+  // const onSubmitFooter = (index) => (message) => {
+  //   console.log("onSubmitFooter", index);
+  //   setFooter(true);
+
+  //   let arr = [...contentArray];
+
+  //   // arr[arr.length - 1].content = [...message];
+  //   // setContentArray([...arr]);
+  //   // setEditView(!isEditView);
+  // };
 
   const onSubmitAboutUs = (index) => (message) => {
     let arr = [...contentArray];
@@ -342,24 +391,18 @@ export default function Home() {
             );
           }
         })}
-        {hasFooter && (
-          <Footer
-            items={[
-              {
-                label: "About",
-              },
-              {
-                label: "Help",
-              },
-              {
-                label: "Terms",
-              },
-              {
-                label: "Privacy",
-              },
-            ]}
-          />
-        )}
+        {/* {!isEditView && <Footer items={getFooter().content} />}
+        {isEditView && (
+          <div className="space-x-2 gap-4">
+            <label>Footer</label>
+            <Form
+              content={getFooter.content}
+              onSubmit={() => onSubmitFooter(contentArray.length - 1)}
+              onClickRemove={() => remove(contentArray.length - 1)}
+              onAdd={() => addFooterLink(contentArray.length - 1)}
+            />
+          </div>
+        )} */}
         <aside
           className="w-64 fixed right-0 top-0 opacity-75 py-4"
           aria-label="Sidebar"
@@ -465,16 +508,17 @@ export default function Home() {
                     </button>
                   </li>
                 )}
-                {!hasFooter && (
+                {/* {!hasFooter && (
                   <li className="w-full flex justify-start">
                     <button
-                      onClick={() => setFooter(true)}
+                      // onClick={() => setFooter(true)}
+                      onClick={() => addSection("footer")}
                       className="w-full p-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       Footer
                     </button>
                   </li>
-                )}
+                )} */}
                 {contentArray.length !== 0 && (
                   <li className="border-t border-gray-200">
                     <button
