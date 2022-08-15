@@ -1,6 +1,4 @@
 const Pricing = ({ items }) => {
-  console.log("items", items);
-
   return (
     <section className="">
       <div className="mb-8 text-6xl md:text-7xl font-bold tracking-tighter leading-tight">

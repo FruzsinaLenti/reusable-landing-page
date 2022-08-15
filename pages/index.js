@@ -12,16 +12,9 @@ import Footer from "../components/Footer";
 export default function Home() {
   const [contentArray, setContentArray] = useState([]);
   const [isEditView, setEditView] = useState(false);
-  const [hasFooter, setFooter] = useState(false);
   const [isOpen, setIsopen] = useState(true);
 
-  const toggleSidebar = () => {
-    setIsopen(!isOpen);
-  };
-
   const addSection = (type) => {
-    let arr = [...contentArray];
-
     if (type === "navbar") {
       setContentArray([
         {
@@ -106,60 +99,46 @@ export default function Home() {
           ],
         },
       ]);
-    }
-    // else if (type === "footer") {
-    //   setContentArray([
-    //     ...contentArray,
-    //     {
-    //       type: "footer",
-    //       content: [
-    //         {
-    //           label: "About",
-    //         },
-    //         {
-    //           label: "Help",
-    //         },
-    //         {
-    //           label: "Terms",
-    //         },
-    //         {
-    //           label: "Privacy",
-    //         },
-    //       ],
-    //     },
-    //   ]);
-    // }
-    else {
-      arr.push({
-        type: "content",
-        content: [
-          {
-            label: "New title",
-          },
-          {
-            label:
-              "The generator is an innovative tool that utilizes cross-platform viral AI generation",
-          },
-        ],
-      });
-      setContentArray([...arr]);
+    } else if (type === "footer") {
+      setContentArray([
+        ...contentArray,
+        {
+          type: "footer",
+          content: [
+            {
+              label: "About",
+            },
+            {
+              label: "Help",
+            },
+            {
+              label: "Terms",
+            },
+            {
+              label: "Privacy",
+            },
+          ],
+        },
+      ]);
+    } else {
+      setContentArray([...contentArray]);
     }
   };
 
   const handleEditView = () => {
-    setContentArray([...contentArray]);
     setEditView(!isEditView);
   };
 
   const remove = (index) => {
-    // contentArray.splice(index, 1);
-    // setContentArray([...contentArray]);
+    event.preventDefault();
 
     const arr = [...contentArray];
     setContentArray([...arr.slice(0, index), ...arr.slice(index + 1)]);
   };
 
   const moveUp = (index) => {
+    event.preventDefault();
+
     if (index === 0) {
       return;
     }
@@ -174,6 +153,8 @@ export default function Home() {
   };
 
   const moveDown = (index) => {
+    event.preventDefault();
+
     if (index === contentArray.length - 1) {
       return;
     }
@@ -187,61 +168,41 @@ export default function Home() {
   };
 
   const addNavbarLink = (index) => {
+    event.preventDefault();
+
     let arr = [...contentArray];
+    let arrindexContent = arr[index].content;
 
-    arr[index].content.push({
-      label: "Link",
-    });
-
+    arr[index].content = [
+      ...arrindexContent,
+      {
+        label: "Link",
+      },
+    ];
     setContentArray([...arr]);
   };
-
-  // const addFooterLink = () => {
-  //   // let arr = [...contentArray];
-  //   // arr[arr.length - 1].content.push({
-  //   //   label: "Link",
-  //   // });
-  //   // setContentArray([...arr]);
-  //   // setFooter(true);
-  // };
 
   const getNavbar = () => {
     const newArr = contentArray.find((content) => content.type === "navbar");
-
     return newArr;
   };
 
-  // const getFooter = () => {
-  //   const newArr = contentArray.find((content) => content.type === "footer");
-
-  //   return newArr;
-  // };
-
-  const onSubmitNav = (index) => (message) => {
-    let arr = [...contentArray];
-    arr[index].content = [...message];
-    setContentArray([...arr]);
-    setEditView(!isEditView);
+  const getFooter = () => {
+    const newArr = contentArray.find((content) => content.type === "footer");
+    return newArr;
   };
 
-  // const onSubmitFooter = (index) => (message) => {
-  //   console.log("onSubmitFooter", index);
-  //   setFooter(true);
+  const onSubmit = (index) => {
+    event.preventDefault();
 
-  //   let arr = [...contentArray];
+    // if (message.length === 0) {
+    //   setEditView(!isEditView);
 
-  //   // arr[arr.length - 1].content = [...message];
-  //   // setContentArray([...arr]);
-  //   // setEditView(!isEditView);
-  // };
-
-  const onSubmitAboutUs = (index) => (message) => {
+    //   return;
+    // }
     let arr = [...contentArray];
-
-    arr[index].content = [...message];
-
+    // arr[index].content = [...message];
     setContentArray([...arr]);
-
     setEditView(!isEditView);
   };
 
@@ -252,22 +213,7 @@ export default function Home() {
       text: "New Card text",
     });
 
-    console.log("");
     setContentArray([...arr]);
-  };
-
-  const onSubmitCards = (index) => (message) => {
-    let arr = [...contentArray];
-    arr[index].content = [...message];
-    setContentArray([...arr]);
-    setEditView(!isEditView);
-  };
-
-  const onSubmitPricing = (index) => (message) => {
-    let arr = [...contentArray];
-    arr[index].content = [...message];
-    setContentArray([...arr]);
-    setEditView(!isEditView);
   };
 
   return (
@@ -289,7 +235,7 @@ export default function Home() {
                     <label>Navbar</label>
                     <Form
                       content={getNavbar().content}
-                      onSubmit={onSubmitNav(index)}
+                      onSubmit={() => onSubmit(index)}
                       onClickRemove={() => remove(index)}
                       onAdd={() => addNavbarLink(index)}
                     />
@@ -305,8 +251,8 @@ export default function Home() {
                   <div className="my-4 space-x-2">
                     <label>Hero</label>
                     <Form
-                      content={contentArray[index].content}
-                      onSubmit={onSubmitNav(index)}
+                      content={a.content}
+                      onSubmit={() => onSubmit(index)}
                       onClickMoveUp={() => moveUp(index)}
                       onClickMoveDown={() => moveDown(index)}
                       onClickRemove={() => remove(index)}
@@ -323,8 +269,8 @@ export default function Home() {
                   <div className="my-4 space-x-2">
                     <label>About Us</label>
                     <Form
-                      content={contentArray[index].content}
-                      onSubmit={onSubmitAboutUs(index)}
+                      content={a.content}
+                      onSubmit={() => onSubmit(index)}
                       onClickMoveUp={() => moveUp(index)}
                       onClickMoveDown={() => moveDown(index)}
                       onClickRemove={() => remove(index)}
@@ -341,8 +287,8 @@ export default function Home() {
                   <div className="my-4 space-x-2">
                     <label>Pricing</label>
                     <Form
-                      content={contentArray[index].content}
-                      onSubmit={onSubmitPricing(index)}
+                      content={a.content}
+                      onSubmit={() => onSubmit(index)}
                       onClickMoveUp={() => moveUp(index)}
                       onClickMoveDown={() => moveDown(index)}
                       onClickRemove={() => remove(index)}
@@ -359,8 +305,8 @@ export default function Home() {
                   <div className="my-4 space-x-2">
                     <label>Cards</label>
                     <Form
-                      content={contentArray[index].content}
-                      onSubmit={onSubmitCards(index)}
+                      content={a.content}
+                      onSubmit={() => onSubmit(index)}
                       onClickMoveUp={() => moveUp(index)}
                       onClickMoveDown={() => moveDown(index)}
                       onAddCard={() => addCard(index)}
@@ -370,39 +316,25 @@ export default function Home() {
                 )}
               </div>
             );
-          } else {
+          } else if (a.type === "footer") {
             return (
-              <div key={index} className={` w-full px-6`}>
-                {contentArray[index].inputFields && (
-                  <Form
-                    order={index}
-                    content={contentArray}
-                    isEditView={isEditView}
-                  />
-                )}
+              <div key={index} className="w-full container mx-auto px-5">
+                {!isEditView && <Footer items={getFooter().content} />}
                 {isEditView && (
-                  <div className="absolute z-10 right-0 space-x-2">
-                    <Button onClick={() => moveUp(index)}>↑</Button>
-                    <Button onClick={() => moveDown(index)}>↓</Button>
-                    <Button onClick={() => remove(index)}>X</Button>
+                  <div className="space-x-2 gap-4">
+                    <label>Footer</label>
+                    <Form
+                      content={getFooter().content}
+                      onSubmit={() => onSubmit(index)}
+                      onClickRemove={() => remove(index)}
+                      onAdd={() => addNavbarLink(index)}
+                    />
                   </div>
                 )}
               </div>
             );
           }
         })}
-        {/* {!isEditView && <Footer items={getFooter().content} />}
-        {isEditView && (
-          <div className="space-x-2 gap-4">
-            <label>Footer</label>
-            <Form
-              content={getFooter.content}
-              onSubmit={() => onSubmitFooter(contentArray.length - 1)}
-              onClickRemove={() => remove(contentArray.length - 1)}
-              onAdd={() => addFooterLink(contentArray.length - 1)}
-            />
-          </div>
-        )} */}
         <aside
           className="w-64 fixed right-0 top-0 opacity-75 py-4"
           aria-label="Sidebar"
@@ -412,7 +344,7 @@ export default function Home() {
               <ul className="space-y-2">
                 <li className="w-full flex justify-end bg-blue-900">
                   <button
-                    onClick={toggleSidebar}
+                    onClick={() => setIsopen(!isOpen)}
                     type="button"
                     className="flex items-center p-2 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                   >
@@ -437,63 +369,44 @@ export default function Home() {
                   </button>
                 </li>
                 <li>
-                  <button
-                    onClick={handleEditView}
-                    type="button"
-                    className="flex items-center p-2 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                  >
-                    <span className="flex-1 text-left whitespace-nowrap">
-                      Add page content
-                    </span>
-                    <svg
-                      className="w-6 h-6"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clipRule="evenodd"
-                      ></path>
-                    </svg>
-                  </button>
-                  {!isEditView && (
-                    <ul className="py-2 space-y-2">
-                      <li>
-                        <button
-                          onClick={() => addSection("hero")}
-                          className="flex items-center p-2 pl-11 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                        >
-                          Hero
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          onClick={() => addSection("aboutUs")}
-                          className="flex items-center p-2 pl-11 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                        >
-                          About Us
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          onClick={() => addSection("pricing")}
-                          className="flex items-center p-2 pl-11 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                        >
-                          Pricing
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          onClick={() => addSection("cards")}
-                          className="flex items-center p-2 pl-11 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                        >
-                          Cards
-                        </button>
-                      </li>
-                    </ul>
-                  )}
+                  <span className="flex items-center p-2 w-full text-base text-gray-900 transition duration-75 group  dark:text-white flex-1 text-left whitespace-nowrap">
+                    Add page content:
+                  </span>
+
+                  <ul className="py-2 space-y-2">
+                    <li>
+                      <button
+                        onClick={() => addSection("hero")}
+                        className="flex items-center p-2 pl-11 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                      >
+                        Hero
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => addSection("aboutUs")}
+                        className="flex items-center p-2 pl-11 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                      >
+                        About Us
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => addSection("pricing")}
+                        className="flex items-center p-2 pl-11 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                      >
+                        Pricing
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => addSection("cards")}
+                        className="flex items-center p-2 pl-11 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                      >
+                        Cards
+                      </button>
+                    </li>
+                  </ul>
                 </li>
 
                 {contentArray.findIndex(
@@ -508,24 +421,27 @@ export default function Home() {
                     </button>
                   </li>
                 )}
-                {/* {!hasFooter && (
+                {contentArray.findIndex(
+                  (content) => content.type === "footer"
+                ) === -1 && (
                   <li className="w-full flex justify-start">
                     <button
-                      // onClick={() => setFooter(true)}
                       onClick={() => addSection("footer")}
                       className="w-full p-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       Footer
                     </button>
                   </li>
-                )} */}
+                )}
                 {contentArray.length !== 0 && (
                   <li className="border-t border-gray-200">
                     <button
                       onClick={handleEditView}
                       className="w-full flex items-center justify-start p-2 text-base text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
-                      <span className="flex-1 whitespace-nowrap">Edit</span>
+                      <span className="flex-1 whitespace-nowrap">
+                        Edit text
+                      </span>
                     </button>
                   </li>
                 )}
@@ -533,17 +449,14 @@ export default function Home() {
             </div>
           ) : (
             <button
-              onClick={toggleSidebar}
+              onClick={() => setIsopen(!isOpen)}
               type="button"
               className=" bg-gray-900 flex items-center p-2 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-              aria-controls="dropdown-example"
-              data-collapse-toggle="dropdown-example"
             >
               <span className="flex-1 ml-3 text-left whitespace-nowrap text-white ">
                 Open Page Builder Menu
               </span>
               <svg
-                sidebar-toggle-item
                 className="w-6 h-6"
                 fill="currentColor"
                 viewBox="0 0 20 20"
