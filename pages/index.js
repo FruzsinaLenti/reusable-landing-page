@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Head from "next/head";
 import Button from "../components/Button";
-import { Form, NavForm, InlineEdit } from "../components/Form";
+import { Form, CardForm } from "../components/Form";
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import AboutUs from "../components/AboutUs";
@@ -67,17 +67,14 @@ export default function Home() {
         {
           type: "pricing",
           content: [
-            { label: "Free" },
+            { title: "Pricing" },
             {
-              label:
-                "The generator is an innovative tool that utilizes cross-platform viral AI generation",
+              label: "Free",
+              text: "The generator is an innovative tool that utilizes cross-platform viral AI generation",
             },
             {
               label: "Plan",
-            },
-            {
-              label:
-                "The generator is an innovative tool that utilizes cross-platform viral AI generation",
+              text: "The generator is an innovative tool that utilizes cross-platform viral AI generation",
             },
           ],
         },
@@ -89,11 +86,14 @@ export default function Home() {
           type: "cards",
           content: [
             {
-              title: "Card title",
+              title: "Cards",
+            },
+            {
+              label: "Card title1",
               text: "The generator is an innovative tool that utilizes cross-platform viral AI generation",
             },
             {
-              title: "Card title",
+              label: "Card title2",
               text: "The generator is an innovative tool that utilizes cross-platform viral AI generation",
             },
           ],
@@ -105,6 +105,9 @@ export default function Home() {
         {
           type: "footer",
           content: [
+            {
+              label: "Website.",
+            },
             {
               label: "About",
             },
@@ -195,21 +198,17 @@ export default function Home() {
   const onSubmit = (index) => {
     event.preventDefault();
 
-    // if (message.length === 0) {
-    //   setEditView(!isEditView);
-
-    //   return;
-    // }
     let arr = [...contentArray];
-    // arr[index].content = [...message];
     setContentArray([...arr]);
     setEditView(!isEditView);
   };
 
   const addCard = (index) => {
+    event.preventDefault();
+
     let arr = [...contentArray];
     arr[index].content.push({
-      title: "New Card",
+      label: "New Card",
       text: "New Card text",
     });
 
@@ -286,7 +285,7 @@ export default function Home() {
                 {isEditView && (
                   <div className="my-4 space-x-2">
                     <label>Pricing</label>
-                    <Form
+                    <CardForm
                       content={a.content}
                       onSubmit={() => onSubmit(index)}
                       onClickMoveUp={() => moveUp(index)}
@@ -304,7 +303,7 @@ export default function Home() {
                 {isEditView && (
                   <div className="my-4 space-x-2">
                     <label>Cards</label>
-                    <Form
+                    <CardForm
                       content={a.content}
                       onSubmit={() => onSubmit(index)}
                       onClickMoveUp={() => moveUp(index)}
@@ -318,7 +317,7 @@ export default function Home() {
             );
           } else if (a.type === "footer") {
             return (
-              <div key={index} className="w-full container mx-auto px-5">
+              <div key={index} className="">
                 {!isEditView && <Footer items={getFooter().content} />}
                 {isEditView && (
                   <div className="space-x-2 gap-4">
