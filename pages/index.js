@@ -2,107 +2,115 @@ import React, { useState } from "react";
 import Head from "next/head";
 import Button from "../components/Button";
 import { Form, CardForm } from "../components/Form";
-import Navbar from "../components/Navbar";
+import Header from "../components/Header";
 import Hero from "../components/Hero";
 import AboutUs from "../components/AboutUs";
 import Pricing from "../components/Pricing";
 import Cards from "../components/Cards";
 import Footer from "../components/Footer";
 
-export default function Home() {
-  const [contentArray, setContentArray] = useState([]);
-  const [isEditView, setEditView] = useState(false);
-  const [isOpen, setIsopen] = useState(true);
+const headerSection = {
+  type: "header",
+  content: [
+    {
+      label: "Product",
+    },
+    {
+      label: "Pricing",
+    },
+  ],
+};
 
-  const addSection = (type) => {
-    if (type === "navbar") {
-      setContentArray([
-        {
-          type: "navbar",
-          content: [
-            {
-              label: "Product",
-            },
-            {
-              label: "Pricing",
-            },
-          ],
-        },
-        ...contentArray,
-      ]);
-    } else if (type === "hero") {
-      setContentArray([
-        ...contentArray,
-        {
-          type: "hero",
-          content: [
-            {
-              label: "Website.",
-            },
-            {
-              label: "Deliver transparent web-readiness",
-            },
-          ],
-        },
-      ]);
-    } else if (type === "aboutUs") {
-      setContentArray([
-        ...contentArray,
-        {
-          type: "aboutUs",
-          content: [
-            {
-              label: "Deliver Transparent Web-readiness Generation",
-            },
-            {
-              label:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quid dubitas igitur mutare principia naturae? Ita multo sanguine profuso in laetitia et in victoria est mortuus. Omnia contraria, quos etiam insanos esse vultis. Hinc ceteri particulas arripere conati suam quisque videro voluit afferre sententiam. Quis non odit sordidos, vanos, leves, futtiles? Quasi ego id curem, quid ille aiat aut neget.",
-            },
-          ],
-        },
-      ]);
-    } else if (type === "pricing") {
-      setContentArray([
-        ...contentArray,
-        {
-          type: "pricing",
-          content: [
-            { title: "Pricing" },
-            {
-              label: "Free",
-              text: "The generator is an innovative tool that utilizes cross-platform viral AI generation",
-            },
-            {
-              label: "Plan",
-              text: "The generator is an innovative tool that utilizes cross-platform viral AI generation",
-            },
-          ],
-        },
-      ]);
-    } else if (type === "cards") {
-      setContentArray([
-        ...contentArray,
-        {
-          type: "cards",
-          content: [
-            {
-              title: "Cards",
-            },
-            {
-              label: "Card title1",
-              text: "The generator is an innovative tool that utilizes cross-platform viral AI generation",
-            },
-            {
-              label: "Card title2",
-              text: "The generator is an innovative tool that utilizes cross-platform viral AI generation",
-            },
-          ],
-        },
-      ]);
-    } else if (type === "footer") {
-      setContentArray([
-        ...contentArray,
-        {
+const addSection = (setSection) => (type) => {
+  if (type === "header") {
+    setSection((current) => {
+      return {
+        ...current,
+        header: headerSection,
+      };
+    });
+  } else if (type === "hero") {
+    setSection((current) => {
+      return {
+        ...current,
+        main: [
+          ...current.main,
+          {
+            type: "hero",
+            title: "Website.",
+            text: "Deliver transparent web-readiness",
+          },
+        ],
+      };
+    });
+  } else if (type === "aboutUs") {
+    setSection((current) => {
+      return {
+        ...current,
+        main: [
+          ...current.main,
+          {
+            type: "aboutUs",
+            title: "Deliver Transparent Web-readiness Generation",
+            content:
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quid dubitas igitur mutare principia naturae? Ita multo sanguine profuso in laetitia et in victoria est mortuus. Omnia contraria, quos etiam insanos esse vultis. Hinc ceteri particulas arripere conati suam quisque videro voluit afferre sententiam. Quis non odit sordidos, vanos, leves, futtiles? Quasi ego id curem, quid ille aiat aut neget.",
+          },
+        ],
+      };
+    });
+  } else if (type === "pricing") {
+    setSection((current) => {
+      return {
+        ...current,
+        main: [
+          ...current.main,
+          {
+            type: "pricing",
+            content: [
+              { title: "Pricing" },
+              {
+                label: "Free",
+                text: "The generator is an innovative tool that utilizes cross-platform viral AI generation",
+              },
+              {
+                label: "Plan",
+                text: "The generator is an innovative tool that utilizes cross-platform viral AI generation",
+              },
+            ],
+          },
+        ],
+      };
+    });
+  } else if (type === "cards") {
+    setSection((current) => {
+      return {
+        ...current,
+        main: [
+          ...current.main,
+          {
+            type: "cards",
+            content: [
+              {
+                title: "Cards",
+              },
+              {
+                label: "Card title1",
+                text: "The generator is an innovative tool that utilizes cross-platform viral AI generation",
+              },
+              {
+                label: "Card title2",
+                text: "The generator is an innovative tool that utilizes cross-platform viral AI generation",
+              },
+            ],
+          },
+        ],
+      };
+    });
+  } else if (type === "footer") {
+    setSection((current) => {
+      return {
+        ...current,
+        footer: {
           type: "footer",
           content: [
             {
@@ -122,24 +130,54 @@ export default function Home() {
             },
           ],
         },
-      ]);
-    } else {
-      setContentArray([...contentArray]);
-    }
-  };
+      };
+    });
+  }
+};
+
+const ListItem = ({ children, handleClick }) => {
+  console.log(children, handleClick);
+  return (
+    <li className="w-full flex justify-start">
+      <button
+        onClick={() => handleClick()}
+        className="w-full p-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+      >
+        {children}
+      </button>
+    </li>
+  );
+};
+
+export default function Home() {
+  const [content, setContentArray] = useState({
+    header: null,
+    main: [],
+    footer: null,
+  });
+
+  const [isEditView, setEditView] = useState(false);
+  const [isOpen, setIsopen] = useState(true);
+
+  const addSectionToContent = addSection(setContentArray);
+
+  const updateHeader = () =>
+    setContentArray((current) => {
+      return { ...current, header: null };
+    });
 
   const handleEditView = () => {
     setEditView(!isEditView);
   };
 
-  const remove = (index) => {
+  const remove = (event, index) => {
     event.preventDefault();
 
     const arr = [...contentArray];
     setContentArray([...arr.slice(0, index), ...arr.slice(index + 1)]);
   };
 
-  const moveUp = (index) => {
+  const moveUp = (event, index) => {
     event.preventDefault();
 
     if (index === 0) {
@@ -185,17 +223,7 @@ export default function Home() {
     setContentArray([...arr]);
   };
 
-  const getNavbar = () => {
-    const newArr = contentArray.find((content) => content.type === "navbar");
-    return newArr;
-  };
-
-  const getFooter = () => {
-    const newArr = contentArray.find((content) => content.type === "footer");
-    return newArr;
-  };
-
-  const onSubmit = (index) => {
+  const onSubmit = (index) => (event) => {
     event.preventDefault();
 
     let arr = [...contentArray];
@@ -224,28 +252,27 @@ export default function Home() {
       </Head>
 
       <main>
-        {contentArray.map((a, index) => {
-          if (a.type === "navbar") {
-            return (
-              <div key={index}>
-                {!isEditView && <Navbar items={a.content} />}
-                {getNavbar() && isEditView && (
-                  <div className="space-x-2 gap-4">
-                    <label>Navbar</label>
-                    <Form
-                      content={getNavbar().content}
-                      onSubmit={() => onSubmit(index)}
-                      onClickRemove={() => remove(index)}
-                      onAdd={() => addNavbarLink(index)}
-                    />
-                  </div>
-                )}
+        {content.header && (
+          <>
+            {!isEditView && <Header items={content.header.content} />}
+            {isEditView && (
+              <div className="space-x-2 gap-4">
+                <label>Header</label>
+                <Form
+                  content={header.content}
+                  // onSubmit={() => onSubmit(index)}
+                  // onClickRemove={() => remove(index)}
+                  // onAdd={() => addNavbarLink(index)}
+                />
               </div>
-            );
-          } else if (a.type === "hero") {
+            )}
+          </>
+        )}
+        {content.main.map((a, index) => {
+          if (a.type === "hero") {
             return (
               <div key={index} className="container mx-auto px-5 w-full">
-                {!isEditView && <Hero items={a.content} />}
+                {!isEditView && <Hero items={a} />}
                 {isEditView && (
                   <div className="my-4 space-x-2">
                     <label>Hero</label>
@@ -255,6 +282,17 @@ export default function Home() {
                       onClickMoveUp={() => moveUp(index)}
                       onClickMoveDown={() => moveDown(index)}
                       onClickRemove={() => remove(index)}
+                      onchangeValue={(index, newValue) => {
+                        //content field with that array
+                        //assign that field into separate variable
+                        const field = content[index];
+                        const newField = { ...field, label: newValue };
+                        setContentArray([
+                          ...contentArray.slice(),
+                          newField,
+                          contentArray.slice(),
+                        ]);
+                      }}
                     />
                   </div>
                 )}
@@ -263,7 +301,7 @@ export default function Home() {
           } else if (a.type === "aboutUs") {
             return (
               <div key={index} className="container mx-auto px-5 w-full">
-                {!isEditView && <AboutUs items={a.content} />}
+                {!isEditView && <AboutUs items={a} />}
                 {isEditView && (
                   <div className="my-4 space-x-2">
                     <label>About Us</label>
@@ -315,25 +353,24 @@ export default function Home() {
                 )}
               </div>
             );
-          } else if (a.type === "footer") {
-            return (
-              <div key={index} className="">
-                {!isEditView && <Footer items={getFooter().content} />}
-                {isEditView && (
-                  <div className="space-x-2 gap-4">
-                    <label>Footer</label>
-                    <Form
-                      content={getFooter().content}
-                      onSubmit={() => onSubmit(index)}
-                      onClickRemove={() => remove(index)}
-                      onAdd={() => addNavbarLink(index)}
-                    />
-                  </div>
-                )}
-              </div>
-            );
           }
         })}
+        {content.footer && (
+          <>
+            {!isEditView && <Footer items={content.footer} />}
+            {isEditView && (
+              <div className="space-x-2 gap-4">
+                <label>Footer</label>
+                <Form
+                  content={content.footer}
+                  // onSubmit={() => onSubmit(index)}
+                  // onClickRemove={() => remove(index)}
+                  // onAdd={() => addNavbarLink(index)}
+                />
+              </div>
+            )}
+          </>
+        )}
         <aside
           className="w-64 fixed right-0 top-0 opacity-75 py-4"
           aria-label="Sidebar"
@@ -373,66 +410,51 @@ export default function Home() {
                   </span>
 
                   <ul className="py-2 space-y-2">
-                    <li>
-                      <button
-                        onClick={() => addSection("hero")}
-                        className="flex items-center p-2 pl-11 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                      >
-                        Hero
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        onClick={() => addSection("aboutUs")}
-                        className="flex items-center p-2 pl-11 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                      >
-                        About Us
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        onClick={() => addSection("pricing")}
-                        className="flex items-center p-2 pl-11 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                      >
-                        Pricing
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        onClick={() => addSection("cards")}
-                        className="flex items-center p-2 pl-11 w-full text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                      >
-                        Cards
-                      </button>
-                    </li>
+                    <ListItem handleClick={() => addSectionToContent("hero")}>
+                      Hero
+                    </ListItem>
+                    <ListItem
+                      handleClick={() => addSectionToContent("aboutUs")}
+                    >
+                      About Us
+                    </ListItem>
+                    <ListItem
+                      handleClick={() => addSectionToContent("pricing")}
+                    >
+                      Pricing
+                    </ListItem>
+                    <ListItem handleClick={() => addSectionToContent("cards")}>
+                      Cards
+                    </ListItem>
                   </ul>
                 </li>
 
-                {contentArray.findIndex(
-                  (content) => content.type === "navbar"
-                ) === -1 && (
-                  <li className="w-full flex justify-start">
-                    <button
-                      onClick={() => addSection("navbar")}
-                      className="w-full p-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      Navbar
-                    </button>
-                  </li>
+                {content.header ? (
+                  <ListItem handleClick={() => updateHeader()}>
+                    Remove Header
+                  </ListItem>
+                ) : (
+                  <ListItem handleClick={() => addSectionToContent("header")}>
+                    Header
+                  </ListItem>
                 )}
-                {contentArray.findIndex(
-                  (content) => content.type === "footer"
-                ) === -1 && (
-                  <li className="w-full flex justify-start">
-                    <button
-                      onClick={() => addSection("footer")}
-                      className="w-full p-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      Footer
-                    </button>
-                  </li>
+
+                {content.footer ? (
+                  <ListItem
+                    handleClick={() => {
+                      setContentArray((current) => {
+                        return { ...current, footer: null };
+                      });
+                    }}
+                  >
+                    Remove Footer
+                  </ListItem>
+                ) : (
+                  <ListItem handleClick={() => addSectionToContent("footer")}>
+                    Footer
+                  </ListItem>
                 )}
-                {contentArray.length !== 0 && (
+                {/* {contentArray.length !== 0 && (
                   <li className="border-t border-gray-200">
                     <button
                       onClick={handleEditView}
@@ -443,7 +465,7 @@ export default function Home() {
                       </span>
                     </button>
                   </li>
-                )}
+                )} */}
               </ul>
             </div>
           ) : (
