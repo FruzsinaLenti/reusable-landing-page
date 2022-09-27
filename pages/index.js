@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Head from "next/head";
-import Button from "../components/Button";
-import { Form, CardForm } from "../components/Form";
+import { HeaderForm, Form, CardForm } from "../components/Form";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
 import AboutUs from "../components/AboutUs";
@@ -9,24 +8,22 @@ import Pricing from "../components/Pricing";
 import Cards from "../components/Cards";
 import Footer from "../components/Footer";
 
-const headerSection = {
-  type: "header",
-  content: [
-    {
-      label: "Product",
-    },
-    {
-      label: "Pricing",
-    },
-  ],
-};
-
 const addSection = (setSection) => (type) => {
   if (type === "header") {
     setSection((current) => {
       return {
         ...current,
-        header: headerSection,
+        header: {
+          type: "header",
+          links: [
+            {
+              label: "Product",
+            },
+            {
+              label: "Pricing",
+            },
+          ],
+        },
       };
     });
   } else if (type === "hero") {
@@ -135,19 +132,16 @@ const addSection = (setSection) => (type) => {
   }
 };
 
-const ListItem = ({ children, handleClick }) => {
-  console.log(children, handleClick);
-  return (
-    <li className="w-full flex justify-start">
-      <button
-        onClick={() => handleClick()}
-        className="w-full p-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-      >
-        {children}
-      </button>
-    </li>
-  );
-};
+const ListItem = ({ children, handleClick }) => (
+  <li className="w-full flex justify-start">
+    <button
+      onClick={() => handleClick()}
+      className="w-full p-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+    >
+      {children}
+    </button>
+  </li>
+);
 
 export default function Home() {
   const [content, setContentArray] = useState({
@@ -155,7 +149,6 @@ export default function Home() {
     main: [],
     footer: null,
   });
-
   const [isEditView, setEditView] = useState(false);
   const [isOpen, setIsopen] = useState(true);
 
@@ -208,26 +201,19 @@ export default function Home() {
     setContentArray([...arr]);
   };
 
-  const addNavbarLink = (index) => {
-    event.preventDefault();
+  const addNavbarLink = (e) => {
+    e.preventDefault();
 
-    let arr = [...contentArray];
-    let arrindexContent = arr[index].content;
-
-    arr[index].content = [
-      ...arrindexContent,
-      {
-        label: "Link",
+    setContentArray({
+      ...content,
+      header: {
+        ...content.header,
+        links: [...content.header.links, { label: "Change Me Link" }],
       },
-    ];
-    setContentArray([...arr]);
+    });
   };
 
-  const onSubmit = (index) => (event) => {
-    event.preventDefault();
-
-    let arr = [...contentArray];
-    setContentArray([...arr]);
+  const onSubmit = () => {
     setEditView(!isEditView);
   };
 
@@ -243,6 +229,35 @@ export default function Home() {
     setContentArray([...arr]);
   };
 
+  const handleOnChangeHeader = (index) => (e) => {
+    setContentArray({
+      ...content,
+      header: {
+        ...content.header,
+        links: [
+          ...content.header.links.slice(0, index),
+          { label: e.target.value },
+          ...content.header.links.slice(index + 1),
+        ],
+      },
+    });
+  };
+
+  const removeHeader = (index) => (e) => {
+    e.preventDefault();
+
+    setContentArray({
+      ...content,
+      header: {
+        ...content.header,
+        links: [
+          ...content.header.links.slice(0, index),
+          ...content.header.links.slice(index + 1),
+        ],
+      },
+    });
+  };
+
   return (
     <div>
       <Head>
@@ -254,21 +269,22 @@ export default function Home() {
       <main>
         {content.header && (
           <>
-            {!isEditView && <Header items={content.header.content} />}
+            {!isEditView && <Header items={content.header.links} />}
             {isEditView && (
               <div className="space-x-2 gap-4">
                 <label>Header</label>
-                <Form
-                  content={header.content}
-                  // onSubmit={() => onSubmit(index)}
-                  // onClickRemove={() => remove(index)}
-                  // onAdd={() => addNavbarLink(index)}
+                <HeaderForm
+                  links={content.header.links}
+                  onSubmit={() => onSubmit()}
+                  onClickRemove={(index) => removeHeader(index)}
+                  onAdd={addNavbarLink}
+                  onChange={(index) => handleOnChangeHeader(index)}
                 />
               </div>
             )}
           </>
         )}
-        {content.main.map((a, index) => {
+        {/* {content.main.map((a, index) => {
           if (a.type === "hero") {
             return (
               <div key={index} className="container mx-auto px-5 w-full">
@@ -277,12 +293,12 @@ export default function Home() {
                   <div className="my-4 space-x-2">
                     <label>Hero</label>
                     <Form
-                      content={a.content}
+                      content={a}
                       onSubmit={() => onSubmit(index)}
                       onClickMoveUp={() => moveUp(index)}
                       onClickMoveDown={() => moveDown(index)}
                       onClickRemove={() => remove(index)}
-                      onchangeValue={(index, newValue) => {
+                      onChangeValue={(index, newValue) => {
                         //content field with that array
                         //assign that field into separate variable
                         const field = content[index];
@@ -354,8 +370,8 @@ export default function Home() {
               </div>
             );
           }
-        })}
-        {content.footer && (
+        })} */}
+        {/* {content.footer && (
           <>
             {!isEditView && <Footer items={content.footer} />}
             {isEditView && (
@@ -370,7 +386,7 @@ export default function Home() {
               </div>
             )}
           </>
-        )}
+        )} */}
         <aside
           className="w-64 fixed right-0 top-0 opacity-75 py-4"
           aria-label="Sidebar"
@@ -410,6 +426,17 @@ export default function Home() {
                   </span>
 
                   <ul className="py-2 space-y-2">
+                    {content.header ? (
+                      <ListItem handleClick={() => updateHeader()}>
+                        Remove Header
+                      </ListItem>
+                    ) : (
+                      <ListItem
+                        handleClick={() => addSectionToContent("header")}
+                      >
+                        Header
+                      </ListItem>
+                    )}
                     <ListItem handleClick={() => addSectionToContent("hero")}>
                       Hero
                     </ListItem>
@@ -429,16 +456,6 @@ export default function Home() {
                   </ul>
                 </li>
 
-                {content.header ? (
-                  <ListItem handleClick={() => updateHeader()}>
-                    Remove Header
-                  </ListItem>
-                ) : (
-                  <ListItem handleClick={() => addSectionToContent("header")}>
-                    Header
-                  </ListItem>
-                )}
-
                 {content.footer ? (
                   <ListItem
                     handleClick={() => {
@@ -454,17 +471,14 @@ export default function Home() {
                     Footer
                   </ListItem>
                 )}
-                {/* {contentArray.length !== 0 && (
-                  <li className="border-t border-gray-200">
-                    <button
-                      onClick={handleEditView}
-                      className="w-full flex items-center justify-start p-2 text-base text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      <span className="flex-1 whitespace-nowrap">
-                        Edit text
-                      </span>
-                    </button>
-                  </li>
+
+                <div className="border-t border-gray-200">
+                  <ListItem handleClick={handleEditView}>Edit Text</ListItem>
+                </div>
+                {/* {content.main.length !== 0 && (
+                  <div className="border-t border-gray-200">
+                    <ListItem handleClick={handleEditView}>Edit Text</ListItem>
+                  </div>
                 )} */}
               </ul>
             </div>

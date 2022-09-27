@@ -1,5 +1,39 @@
 import { useState } from "react";
 import Button from "./Button";
+import XIcon from "./XIcon";
+
+export const HeaderForm = ({
+  links,
+  onAdd,
+  onChange,
+  onClickRemove,
+  onSubmit,
+}) => {
+  return (
+    <form className="p-6 space-y-2 w-full border-2">
+      {links &&
+        links.map((link, index) => {
+          return (
+            <div key={index}>
+              <button onClick={onClickRemove(index)}>
+                <XIcon className="text-red-700 w-4 h-4" />
+              </button>
+              <textarea
+                rows={1}
+                onChange={onChange(index)}
+                value={link.label}
+                className="form-control px-3 py-1.5 w-full text-gray-800 border border-solid border-gray-300 transition ease-in-out"
+              />
+            </div>
+          );
+        })}
+      <div className="space-x-2">
+        {onAdd && <Button onClick={onAdd}>Add Link</Button>}
+        {onSubmit && <Button onClick={onSubmit}>Save</Button>}
+      </div>
+    </form>
+  );
+};
 
 export const Form = ({
   content,
@@ -44,6 +78,7 @@ export const Form = ({
     </form>
   );
 };
+
 export const CardForm = ({
   content,
   onSubmit,
